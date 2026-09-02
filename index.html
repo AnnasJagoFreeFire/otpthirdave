@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Login Akun</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg-primary: #08070e;
+            --bg-secondary: #0e0c1a;
+            --bg-glass: rgba(255, 255, 255, 0.03);
+            --border-glass: rgba(255, 255, 255, 0.06);
+            --cyan: #00d4ff;
+            --cyan-glow: rgba(0, 212, 255, 0.3);
+            --purple: #a855f7;
+            --purple-glow: rgba(168, 85, 247, 0.3);
+            --emerald: #34d399;
+            --emerald-glow: rgba(52, 211, 153, 0.3);
+            --gold: #f5c842;
+            --text-primary: #f0edf5;
+            --text-secondary: #b8b0c9;
+            --text-muted: #6a627a;
+            --radius: 20px;
+            --radius-sm: 12px;
+            --transition: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            --font-display: 'Poppins', sans-serif;
+            --font-body: 'Plus Jakarta Sans', 'Inter', sans-serif;
+        }
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image:
+                radial-gradient(ellipse at 20% 30%, rgba(0, 212, 255, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(52, 211, 153, 0.03) 0%, transparent 60%);
+            background-attachment: fixed;
+            padding: 16px;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--cyan);
+            border-radius: 10px;
+        }
+        .app-container {
+            max-width: 480px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .page {
+            display: none;
+            animation: pageFadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes pageFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(18px) scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .glass-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(24px) saturate(1.4);
+            -webkit-backdrop-filter: blur(24px) saturate(1.4);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius);
+            box-shadow: 0 8px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            position: relative;
+            overflow: hidden;
+            padding: 40px 32px 36px;
+        }
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius);
+            padding: 1px;
+            background: linear-gradient(135deg, var(--cyan), transparent 40%, var(--purple) 80%, var(--cyan));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .login-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.8rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--cyan), var(--purple), var(--emerald));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+        @keyframes gradientShift {
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        .login-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 400;
+            margin-bottom: 28px;
+            letter-spacing: 0.02em;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .form-group .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1.5px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+        .form-group .input-wrap:focus-within {
+            border-color: var(--cyan);
+            box-shadow: 0 0 28px var(--cyan-glow);
+        }
+        .form-group .input-wrap .icon-svg {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            margin-left: 14px;
+            opacity: 0.5;
+            transition: var(--transition);
+        }
+        .form-group .input-wrap:focus-within .icon-svg {
+            opacity: 1;
+            filter: drop-shadow(0 0 6px var(--cyan-glow));
+        }
+        .form-group .input-wrap input {
+            width: 100%;
+            padding: 13px 16px 13px 12px;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: var(--font-body);
+            font-weight: 500;
+            letter-spacing: 0.01em;
+        }
+        .form-group .input-wrap input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 0.85rem;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            font-family: var(--font-body);
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.04em;
+            position: relative;
+            overflow: hidden;
+            margin-top: 6px;
+            box-shadow: 0 4px 28px rgba(0, 212, 255, 0.15);
+        }
+        .btn-login:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 40px rgba(0, 212, 255, 0.25);
+        }
+        .btn-login:active {
+            transform: scale(0.96);
+        }
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-login .btn-shimmer {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 60%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .btn-login:hover .btn-shimmer {
+            opacity: 1;
+        }
+
+        .login-status {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            min-height: 30px;
+            text-align: center;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+        .login-status.success {
+            color: var(--emerald);
+            background: rgba(52, 211, 153, 0.08);
+            border: 1px solid rgba(52, 211, 153, 0.12);
+        }
+        .login-status.error {
+            color: #f87171;
+            background: rgba(248, 113, 113, 0.08);
+            border: 1px solid rgba(248, 113, 113, 0.12);
+        }
+        .login-status.waiting {
+            color: var(--gold);
+            background: rgba(245, 200, 66, 0.08);
+            border: 1px solid rgba(245, 200, 66, 0.12);
+        }
+        .login-status.info {
+            color: var(--cyan);
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.12);
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            opacity: 0.4;
+            letter-spacing: 0.04em;
+        }
+
+        /* Dashboard */
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px) saturate(1.4);
+            -webkit-backdrop-filter: blur(20px) saturate(1.4);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius);
+            padding: 1px;
+            background: linear-gradient(135deg, var(--gold), transparent 40%, var(--cyan) 80%, var(--gold));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .brand-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            position: relative;
+            z-index: 1;
+        }
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+        }
+        .brand-text {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.4rem;
+            letter-spacing: 0.04em;
+            background: linear-gradient(135deg, var(--gold), #fce68a, var(--cyan));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 5s ease-in-out infinite;
+            line-height: 1;
+        }
+        .brand-sub {
+            font-size: 0.45rem;
+            font-weight: 400;
+            letter-spacing: 0.3em;
+            color: var(--text-secondary);
+            -webkit-text-fill-color: var(--text-secondary);
+            background: none;
+            display: block;
+            margin-top: -2px;
+            opacity: 0.5;
+            text-transform: uppercase;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1;
+        }
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 5px 12px 5px 8px;
+            border-radius: 40px;
+            border: 1px solid var(--border-glass);
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--emerald);
+            box-shadow: 0 0 12px var(--emerald-glow);
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+        .status-dot.offline {
+            background: #f87171;
+            box-shadow: 0 0 12px rgba(248, 113, 113, 0.4);
+            animation: pulseRed 1.2s ease-in-out infinite;
+        }
+        @keyframes pulseRed {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+        }
+        .status-label {
+            text-transform: uppercase;
+            font-size: 0.5rem;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+        }
+        .status-value {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-glass);
+            color: var(--text-muted);
+            padding: 5px 14px;
+            border-radius: 40px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-body);
+        }
+        .btn-logout:hover {
+            background: rgba(248, 113, 113, 0.1);
+            border-color: #f87171;
+            color: #f87171;
+        }
+
+        .otp-feed {
+            background: var(--bg-glass);
+            backdrop-filter: blur(18px) saturate(1.3);
+            -webkit-backdrop-filter: blur(18px) saturate(1.3);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius);
+            padding: 20px 18px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            margin-bottom: 16px;
+        }
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .feed-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .feed-title .title-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+        .feed-count {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 3px 14px;
+            border-radius: 40px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--cyan);
+            border: 1px solid rgba(0, 212, 255, 0.08);
+            font-family: var(--font-display);
+        }
+
+        .feed-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 420px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .otp-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            border-left: 3px solid var(--cyan);
+            animation: slideIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+            transition: var(--transition);
+        }
+        .otp-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-left-color: var(--purple);
+        }
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(12px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .otp-item .row1 {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+            font-size: 0.9rem;
+        }
+        .otp-item .row1 .platform {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .otp-item .row1 .dot {
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+        .otp-item .row1 .flag {
+            font-size: 1rem;
+        }
+        .otp-item .row1 .short {
+            font-weight: 700;
+            color: var(--gold);
+        }
+        .otp-item .row2 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        .otp-item .row2 .phone {
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: 0.02em;
+        }
+        .otp-item .row2 .sensor-icon {
+            color: var(--cyan);
+            font-size: 0.75rem;
+        }
+        .otp-item .row3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+        .otp-item .row3 .hashtag {
+            color: var(--purple);
+            font-weight: 600;
+        }
+        .otp-item .row3 .king-tag {
+            color: var(--gold);
+            font-weight: 700;
+            font-family: var(--font-display);
+            font-size: 0.65rem;
+            letter-spacing: 0.04em;
+        }
+        .otp-item .row3 .crown-icon {
+            color: var(--gold);
+            font-size: 0.8rem;
+            filter: drop-shadow(0 0 6px rgba(245, 200, 66, 0.2));
+        }
+
+        .otp-card {
+            margin-top: 10px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(168, 85, 247, 0.04));
+            border: 1px solid rgba(0, 212, 255, 0.12);
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            animation: glowPulse 3s ease-in-out infinite;
+            transition: var(--transition);
+        }
+        .otp-card:hover {
+            border-color: var(--emerald);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.04);
+        }
+        @keyframes glowPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 6px rgba(0, 212, 255, 0.02);
+            }
+            50% {
+                box-shadow: 0 0 24px rgba(0, 212, 255, 0.06);
+            }
+        }
+
+        .otp-code-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .otp-label {
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .otp-code {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: 0.12em;
+            color: var(--cyan);
+            text-shadow: 0 0 24px rgba(0, 212, 255, 0.1);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 212, 255, 0.06);
+        }
+        .otp-time {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 400;
+        }
+        .otp-time .time-icon {
+            width: 14px;
+            height: 14px;
+        }
+
+        .btn-copy {
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            color: var(--cyan);
+            padding: 7px 18px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            backdrop-filter: blur(4px);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-copy::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(0, 212, 255, 0.1), transparent 70%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .btn-copy:hover {
+            background: rgba(0, 212, 255, 0.16);
+            border-color: var(--cyan);
+            transform: scale(1.03);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.06);
+        }
+        .btn-copy:hover::after {
+            opacity: 1;
+        }
+        .btn-copy:active {
+            transform: scale(0.93);
+        }
+        .btn-copy .copy-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state .empty-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 14px;
+            opacity: 0.2;
+        }
+        .empty-state p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .empty-state .hint {
+            font-size: 0.7rem;
+            margin-top: 8px;
+            opacity: 0.5;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 360px;
+            width: calc(100% - 40px);
+            pointer-events: none;
+        }
+        .toast {
+            background: rgba(8, 7, 14, 0.94);
+            backdrop-filter: blur(20px) saturate(1.5);
+            -webkit-backdrop-filter: blur(20px) saturate(1.5);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            padding: 14px 20px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            box-shadow: 0 16px 56px rgba(0, 0, 0, 0.6);
+            pointer-events: auto;
+            animation: toastIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid var(--cyan);
+        }
+        .toast.success {
+            border-left-color: var(--emerald);
+        }
+        .toast.error {
+            border-left-color: #f87171;
+        }
+        .toast .toast-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+        .toast .toast-msg {
+            flex: 1;
+        }
+        @keyframes toastIn {
+            0% {
+                opacity: 0;
+                transform: translateX(40px) scale(0.92);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+        .toast-out {
+            animation: toastOut 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        @keyframes toastOut {
+            0% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(40px) scale(0.92);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .waiting-overlay {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .waiting-overlay .spinner {
+            display: inline-block;
+            width: 44px;
+            height: 44px;
+            border: 3px solid var(--border-glass);
+            border-top-color: var(--cyan);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            margin: 16px auto;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .waiting-overlay h3 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        .waiting-overlay p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 28px 18px 24px;
+            }
+            .login-title {
+                font-size: 1.4rem;
+            }
+            .dashboard-header {
+                padding: 12px 14px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .brand-text {
+                font-size: 1.1rem;
+            }
+            .brand-icon {
+                width: 32px;
+                height: 32px;
+            }
+            .otp-code {
+                font-size: 1.2rem;
+                padding: 2px 10px;
+            }
+            .btn-copy {
+                padding: 5px 14px;
+                font-size: 0.6rem;
+            }
+            .otp-feed {
+                padding: 14px 12px;
+            }
+            .otp-item {
+                padding: 10px 12px;
+            }
+            .otp-item .row1 {
+                font-size: 0.8rem;
+            }
+            .otp-item .row2 {
+                font-size: 0.75rem;
+            }
+            .status-badge {
+                font-size: 0.5rem;
+                padding: 3px 8px 3px 6px;
+            }
+            .btn-logout {
+                font-size: 0.5rem;
+                padding: 3px 10px;
+            }
+            .toast-container {
+                top: 12px;
+                right: 12px;
+                width: calc(100% - 24px);
+            }
+            .toast {
+                padding: 10px 14px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .brand-text {
+                font-size: 0.95rem;
+            }
+            .login-title {
+                font-size: 1.2rem;
+            }
+            .otp-code {
+                font-size: 1rem;
+            }
+            .feed-title {
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ==================== HALAMAN LOGIN ==================== -->
+        <div class="page active" id="loginPage">
+            <div class="glass-card">
+                <div class="login-title">Login Akun</div>
+                <div class="login-subtitle">Masuk untuk mengakses dashboard</div>
+
+                <div class="form-group">
+                    <label>Username</label>
+                    <div class="input-wrap">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        <input type="text" id="loginUsername" placeholder="Masukkan username" autocomplete="username" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrap">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                        <input type="password" id="loginPassword" placeholder="Masukkan password" autocomplete="current-password" />
+                    </div>
+                </div>
+
+                <button class="btn-login" id="loginBtn">
+                    <span class="btn-shimmer"></span>
+                    Masuk
+                </button>
+
+                <div class="login-status" id="loginStatus"></div>
+                <div class="login-footer">© 2026 · Sistem OTP Premium</div>
+            </div>
+        </div>
+
+        <!-- ==================== HALAMAN DASHBOARD ==================== -->
+        <div class="page" id="dashboardPage">
+
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="brand-wrap">
+                    <svg class="brand-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 48L10 22L18 34L26 16L32 28L38 16L46 34L54 22L58 48H6Z" fill="url(#crownGrad)" stroke="url(#crownStroke)" stroke-width="1.5" />
+                        <path d="M12 48L14 40H50L52 48H12Z" fill="url(#crownGrad2)" stroke="url(#crownStroke2)" stroke-width="1" />
+                        <circle cx="32" cy="22" r="3" fill="#f5c842" stroke="#dc143c" stroke-width="1.2" />
+                        <circle cx="18" cy="30" r="2.5" fill="#f5c842" stroke="#dc143c" stroke-width="1" />
+                        <circle cx="46" cy="30" r="2.5" fill="#f5c842" stroke="#dc143c" stroke-width="1" />
+                        <path d="M22 48L26 40H38L42 48H22Z" fill="rgba(245,200,66,0.12)" stroke="rgba(245,200,66,0.15)" stroke-width="0.8" />
+                        <defs>
+                            <linearGradient id="crownGrad" x1="8" y1="16" x2="56" y2="48">
+                                <stop offset="0%" stop-color="#f5c842"/>
+                                <stop offset="40%" stop-color="#ffd966"/>
+                                <stop offset="80%" stop-color="#dc143c"/>
+                                <stop offset="100%" stop-color="#f5c842"/>
+                            </linearGradient>
+                            <linearGradient id="crownStroke" x1="8" y1="16" x2="56" y2="48">
+                                <stop offset="0%" stop-color="#f5c842"/>
+                                <stop offset="100%" stop-color="#dc143c"/>
+                            </linearGradient>
+                            <linearGradient id="crownGrad2" x1="12" y1="40" x2="52" y2="48">
+                                <stop offset="0%" stop-color="#dc143c"/>
+                                <stop offset="100%" stop-color="#f5c842"/>
+                            </linearGradient>
+                            <linearGradient id="crownStroke2" x1="12" y1="40" x2="52" y2="48">
+                                <stop offset="0%" stop-color="#f5c842"/>
+                                <stop offset="100%" stop-color="#dc143c"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="brand-text">
+                        King Annas
+                        <span class="brand-sub">OTP Dashboard</span>
+                    </span>
+                </div>
+
+                <div class="header-actions">
+                    <div class="status-badge">
+                        <span class="status-dot" id="statusDot"></span>
+                        <span class="status-label">Status</span>
+                        <span class="status-value" id="statusLabel">—</span>
+                    </div>
+                    <button class="btn-logout" id="logoutBtn">Keluar</button>
+                </div>
+            </header>
+
+            <!-- Feed OTP -->
+            <section class="otp-feed">
+                <div class="feed-header">
+                    <div class="feed-title">
+                        <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                            <polyline points="17 6 23 6 23 12" />
+                        </svg>
+                        Live Feed
+                    </div>
+                    <span class="feed-count" id="feedCount">0</span>
+                </div>
+
+                <div class="feed-list" id="feedList">
+                    <div class="empty-state" id="emptyState">
+                        <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7" />
+                            <polyline points="16 2 22 2 22 8" />
+                            <line x1="10" y1="14" x2="21" y2="3" />
+                            <path d="M15 16l5-5" />
+                        </svg>
+                        <p>Menunggu OTP masuk …</p>
+                        <span class="hint">Pastikan backend berjalan dan tunnel aktif</span>
+                    </div>
+                </div>
+            </section>
+
+            <div style="text-align:center;font-size:0.55rem;color:var(--text-muted);opacity:0.3;letter-spacing:0.04em;margin-top:8px;">
+                © 2026 King Annas · OTP Automation
+            </div>
+        </div>
+
+        <!-- ==================== HALAMAN WAITING ==================== -->
+        <div class="page" id="waitingPage">
+            <div class="glass-card">
+                <div class="waiting-overlay">
+                    <div class="spinner"></div>
+                    <h3>Menunggu Persetujuan</h3>
+                    <p>Permintaan login Anda telah dikirim ke admin.<br />Silakan tunggu sebentar …</p>
+                    <div style="margin-top:12px;font-size:0.7rem;color:var(--text-muted);" id="waitingUsername"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==================== TOAST ==================== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            const API_BASE = 'https://ham-shaved-ascii-carey.trycloudflare.com';
+
+            const CONFIG = {
+                API_BASE: API_BASE,
+                POLL_INTERVAL: 2200,
+                MAX_ITEMS: 50,
+                TOAST_DURATION: 2800,
+            };
+
+            const $ = (sel) => document.querySelector(sel);
+            const $$ = (sel) => document.querySelectorAll(sel);
+
+            const loginPage = $('#loginPage');
+            const dashboardPage = $('#dashboardPage');
+            const waitingPage = $('#waitingPage');
+            const loginUsername = $('#loginUsername');
+            const loginPassword = $('#loginPassword');
+            const loginBtn = $('#loginBtn');
+            const loginStatus = $('#loginStatus');
+            const logoutBtn = $('#logoutBtn');
+            const feedList = $('#feedList');
+            const emptyState = $('#emptyState');
+            const feedCount = $('#feedCount');
+            const statusDot = $('#statusDot');
+            const statusLabel = $('#statusLabel');
+            const toastContainer = $('#toastContainer');
+            const waitingUsername = $('#waitingUsername');
+
+            let otpItems = [];
+            let isConnected = false;
+            let pollTimer = null;
+            let currentUser = '';
+            let isAdmin = false;
+            let checkApprovalTimer = null;
+            let waitingForApproval = false;
+
+            function showToast(message, type) {
+                type = type || 'info';
+                const el = document.createElement('div');
+                el.className = 'toast ' + type;
+                const iconMap = {
+                    success: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+                    error: '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>',
+                    copy: '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>',
+                    info: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+                };
+                const iconPath = iconMap[type] || iconMap.info;
+                el.innerHTML =
+                    '<span class="toast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                    iconPath + '</svg></span><span class="toast-msg">' + message + '</span>';
+                toastContainer.appendChild(el);
+                var duration = type === 'copy' ? 1600 : CONFIG.TOAST_DURATION;
+                setTimeout(function() {
+                    el.classList.add('toast-out');
+                    setTimeout(function() { el.remove(); }, 350);
+                }, duration);
+            }
+
+            function copyOTP(code, btn) {
+                if (!code) return;
+                navigator.clipboard.writeText(code).then(function() {
+                    showToast('OTP disalin!', 'copy');
+                    if (btn) {
+                        var orig = btn.innerHTML;
+                        btn.innerHTML =
+                            '<svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Tersalin!';
+                        btn.style.borderColor = '#34d399';
+                        btn.style.color = '#34d399';
+                        setTimeout(function() {
+                            btn.innerHTML = orig;
+                            btn.style.borderColor = '';
+                            btn.style.color = '';
+                        }, 1500);
+                    }
+                }).catch(function() {
+                    var textarea = document.createElement('textarea');
+                    textarea.value = code;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    showToast('OTP disalin!', 'copy');
+                });
+            }
+
+            function formatTime(iso) {
+                if (!iso) return '—';
+                try {
+                    var d = new Date(iso);
+                    return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                } catch (_) { return '—'; }
+            }
+
+            function renderFeed() {
+                var children = feedList.children;
+                for (var i = children.length - 1; i >= 0; i--) {
+                    if (children[i].id !== 'emptyState') {
+                        children[i].remove();
+                    }
+                }
+                if (otpItems.length === 0) {
+                    emptyState.classList.remove('hidden');
+                    feedCount.textContent = '0';
+                    return;
+                }
+                emptyState.classList.add('hidden');
+                feedCount.textContent = otpItems.length;
+                var items = [].concat(otpItems).reverse();
+                items.forEach(function(item, idx) {
+                    var div = document.createElement('div');
+                    div.className = 'otp-item';
+                    div.style.animationDelay = (idx * 0.05) + 's';
+                    var platformEmoji = item.platformEmoji || '📱';
+                    var platformName = item.platform || 'WhatsApp';
+                    var flagEmoji = item.flagEmoji || '🏳️';
+                    var shortCode = item.short || 'UN';
+                    var phoneDisplay = item.sensor || item.phone || '—';
+                    var hashtag = item.hashtag || '#otp';
+                    var kingTag = '#KingAnnas';
+                    var timeStr = formatTime(item.timestamp);
+                    div.innerHTML =
+                        '<div class="row1"><span>' + platformEmoji + '</span><span class="platform">' +
+                        platformName + '</span><span class="dot">•</span><span class="flag">' + flagEmoji +
+                        '</span><span class="short">' + shortCode + '</span></div>' +
+                        '<div class="row2"><span class="sensor-icon">📱</span><span class="phone">' +
+                        phoneDisplay + '</span></div>' +
+                        '<div class="row3"><span class="hashtag">' + hashtag +
+                        '</span><span class="crown-icon">👑</span><span class="king-tag">' + kingTag +
+                        '</span></div>' +
+                        '<div class="otp-card">' +
+                        '  <div class="otp-code-wrap">' +
+                        '    <span class="otp-label">OTP Code</span>' +
+                        '    <span class="otp-code">' + (item.otp || '••••••') + '</span>' +
+                        '    <span class="otp-time">' +
+                        '      <svg class="time-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+                        '      ' + timeStr +
+                        '    </span>' +
+                        '  </div>' +
+                        '  <button class="btn-copy" data-otp="' + (item.otp || '') + '">' +
+                        '    <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>' +
+                        '    Salin OTP' +
+                        '  </button>' +
+                        '</div>';
+                    var btn = div.querySelector('.btn-copy');
+                    if (btn) {
+                        var code = btn.dataset.otp;
+                        btn.addEventListener('click', function(e) {
+                            copyOTP(code, this);
+                        });
+                    }
+                    feedList.appendChild(div);
+                });
+            }
+
+            function updateStatus(connected) {
+                isConnected = connected;
+                if (connected) {
+                    statusDot.className = 'status-dot';
+                    statusLabel.textContent = 'Online';
+                } else {
+                    statusDot.className = 'status-dot offline';
+                    statusLabel.textContent = 'Offline';
+                }
+            }
+
+            function playBeep() {
+                try {
+                    var ctx = new(window.AudioContext || window.webkitAudioContext)();
+                    var osc = ctx.createOscillator();
+                    var gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = 880;
+                    gain.gain.value = 0.05;
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.08);
+                    setTimeout(function() { ctx.close(); }, 200);
+                } catch (_) {}
+            }
+
+            async function fetchOTP() {
+                var base = CONFIG.API_BASE;
+                if (!base) {
+                    if (otpItems.length === 0) {
+                        emptyState.innerHTML =
+                            '<svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7"/><polyline points="16 2 22 2 22 8"/><line x1="10" y1="14" x2="21" y2="3"/><path d="M15 16l5-5"/></svg><p>API tidak terhubung</p><span class="hint">Periksa koneksi tunnel</span>';
+                        emptyState.classList.remove('hidden');
+                    }
+                    updateStatus(false);
+                    return;
+                }
+                try {
+                    var url = base + '/api/get-otp';
+                    var resp = await fetch(url, {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' },
+                        cache: 'no-cache',
+                    });
+                    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                    var data = await resp.json();
+                    updateStatus(true);
+                    var items = data.data || data.items || [];
+                    if (Array.isArray(items) && items.length > 0) {
+                        var existing = new Set(otpItems.map(function(i) { return i.id || i.otp; }));
+                        var newItems = items.filter(function(item) {
+                            var key = item.id || item.otp;
+                            return !existing.has(key);
+                        });
+                        if (newItems.length > 0) {
+                            otpItems = newItems.concat(otpItems);
+                            if (otpItems.length > CONFIG.MAX_ITEMS) {
+                                otpItems = otpItems.slice(0, CONFIG.MAX_ITEMS);
+                            }
+                            renderFeed();
+                            newItems.forEach(function(item) {
+                                if (item.otp) {
+                                    showToast('OTP baru: ' + item.otp, 'success');
+                                    playBeep();
+                                }
+                            });
+                        } else {
+                            renderFeed();
+                        }
+                    } else {
+                        renderFeed();
+                    }
+                } catch (err) {
+                    updateStatus(false);
+                }
+            }
+
+            function startPolling() {
+                if (pollTimer) clearInterval(pollTimer);
+                fetchOTP();
+                pollTimer = setInterval(fetchOTP, CONFIG.POLL_INTERVAL);
+            }
+
+            function stopPolling() {
+                if (pollTimer) {
+                    clearInterval(pollTimer);
+                    pollTimer = null;
+                }
+            }
+
+            async function loginUser(username, password) {
+                loginBtn.disabled = true;
+                loginBtn.textContent = 'Memproses …';
+                loginStatus.className = 'login-status';
+                loginStatus.textContent = '';
+                try {
+                    var base = CONFIG.API_BASE;
+                    var url = base + '/api/login';
+                    var resp = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: username, password: password }),
+                    });
+                    var data = await resp.json();
+                    if (data.success) {
+                        currentUser = username;
+                        isAdmin = data.admin || false;
+                        localStorage.setItem('king_annas_auth', 'true');
+                        localStorage.setItem('king_annas_user', username);
+                        loginStatus.className = 'login-status success';
+                        loginStatus.textContent = '✅ ' + data.message;
+                        setTimeout(function() {
+                            showToast('Login berhasil!', 'success');
+                            showDashboard();
+                        }, 400);
+                    } else if (data.waiting) {
+                        waitingForApproval = true;
+                        currentUser = username;
+                        localStorage.setItem('king_annas_auth', 'waiting');
+                        localStorage.setItem('king_annas_user', username);
+                        loginStatus.className = 'login-status waiting';
+                        loginStatus.textContent = '⏳ ' + data.message;
+                        showWaitingPage(username);
+                        startApprovalCheck(username);
+                    } else {
+                        loginStatus.className = 'login-status error';
+                        loginStatus.textContent = '❌ ' + (data.message || 'Login gagal');
+                    }
+                } catch (err) {
+                    loginStatus.className = 'login-status error';
+                    loginStatus.textContent = '❌ Gagal terhubung ke server';
+                }
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Masuk';
+            }
+
+            async function checkApproval(username) {
+                try {
+                    var base = CONFIG.API_BASE;
+                    var url = base + '/api/check-approval?username=' + encodeURIComponent(username);
+                    var resp = await fetch(url);
+                    var data = await resp.json();
+                    if (data.approved) {
+                        waitingForApproval = false;
+                        localStorage.setItem('king_annas_auth', 'true');
+                        showToast('✅ Akun disetujui!', 'success');
+                        showDashboard();
+                        return true;
+                    }
+                    return false;
+                } catch (_) { return false; }
+            }
+
+            function startApprovalCheck(username) {
+                if (checkApprovalTimer) clearInterval(checkApprovalTimer);
+                checkApprovalTimer = setInterval(async function() {
+                    var ok = await checkApproval(username);
+                    if (ok) {
+                        clearInterval(checkApprovalTimer);
+                        checkApprovalTimer = null;
+                    }
+                }, 4000);
+            }
+
+            function showWaitingPage(username) {
+                loginPage.classList.remove('active');
+                dashboardPage.classList.remove('active');
+                waitingPage.classList.add('active');
+                waitingUsername.textContent = 'Username: ' + username;
+            }
+
+            function showDashboard() {
+                loginPage.classList.remove('active');
+                waitingPage.classList.remove('active');
+                dashboardPage.classList.add('active');
+                startPolling();
+            }
+
+            function logout() {
+                stopPolling();
+                if (checkApprovalTimer) {
+                    clearInterval(checkApprovalTimer);
+                    checkApprovalTimer = null;
+                }
+                localStorage.removeItem('king_annas_auth');
+                localStorage.removeItem('king_annas_user');
+                currentUser = '';
+                waitingForApproval = false;
+                otpItems = [];
+                renderFeed();
+                loginPage.classList.add('active');
+                dashboardPage.classList.remove('active');
+                waitingPage.classList.remove('active');
+                loginUsername.value = '';
+                loginPassword.value = '';
+                loginStatus.className = 'login-status';
+                loginStatus.textContent = '';
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Masuk';
+                showToast('Anda telah keluar', 'info');
+            }
+
+            function init() {
+                var auth = localStorage.getItem('king_annas_auth');
+                var user = localStorage.getItem('king_annas_user');
+                if (auth === 'true' && user) {
+                    currentUser = user;
+                    showDashboard();
+                } else if (auth === 'waiting' && user) {
+                    currentUser = user;
+                    showWaitingPage(user);
+                    startApprovalCheck(user);
+                } else {
+                    loginPage.classList.add('active');
+                    dashboardPage.classList.remove('active');
+                    waitingPage.classList.remove('active');
+                }
+
+                loginBtn.addEventListener('click', function() {
+                    var u = loginUsername.value.trim();
+                    var p = loginPassword.value.trim();
+                    if (!u || !p) {
+                        loginStatus.className = 'login-status error';
+                        loginStatus.textContent = '❌ Isi username dan password';
+                        return;
+                    }
+                    loginUser(u, p);
+                });
+
+                loginUsername.addEventListener('keydown', function(e) { if (e.key === 'Enter') loginBtn.click(); });
+                loginPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter') loginBtn.click(); });
+
+                logoutBtn.addEventListener('click', logout);
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.ctrlKey && e.shiftKey && e.key === 'K') {
+                        e.preventDefault();
+                        localStorage.removeItem('king_annas_auth');
+                        localStorage.removeItem('king_annas_user');
+                        stopPolling();
+                        otpItems = [];
+                        renderFeed();
+                        showToast('Session direset', 'info');
+                        logout();
+                    }
+                });
+
+                console.log('👑 King Annas OTP Dashboard v3.0');
+                console.log('ℹ️  Ctrl+Shift+K untuk reset session');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+        })();
+    </script>
+
+</body>
+</html>
