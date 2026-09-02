@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Login Akun</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* RESET & ROOT */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg-primary: #07070e;
+            --bg-secondary: #0e0e1a;
+            --bg-card: rgba(18, 18, 40, 0.7);
+            --bg-glass: rgba(255, 255, 255, 0.04);
+            --border-glass: rgba(255, 255, 255, 0.06);
+            --text-primary: #f0f0ff;
+            --text-secondary: #b0b0d0;
+            --text-muted: #68688a;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #a855f7;
+            --accent-gold: #fbbf24;
+            --accent-emerald: #34d399;
+            --accent-crimson: #ef4444;
+            --shadow-glow: 0 0 40px rgba(0, 212, 255, 0.06);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-lg: 24px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        }
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(ellipse at 20% 40%, rgba(168, 85, 247, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 60%, rgba(0, 212, 255, 0.04) 0%, transparent 50%);
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+        #app {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1440px;
+            min-height: 100vh;
+            min-height: 100dvh;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .page {
+            display: none;
+            width: 100%;
+            animation: fadeSlide 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 380px;
+            width: calc(100% - 48px);
+            pointer-events: none;
+        }
+        .toast {
+            padding: 14px 20px;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px) saturate(1.5);
+            -webkit-backdrop-filter: blur(20px) saturate(1.5);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), var(--shadow-glow);
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            pointer-events: auto;
+        }
+        .toast.hide {
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards reverse;
+        }
+        .toast .toast-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+        }
+        .toast .toast-msg {
+            flex: 1;
+        }
+        .toast .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0 4px;
+            opacity: 0.5;
+            transition: var(--transition);
+        }
+        .toast .toast-close:hover {
+            opacity: 1;
+        }
+        .toast.success {
+            border-left: 3px solid var(--accent-emerald);
+        }
+        .toast.error {
+            border-left: 3px solid var(--accent-crimson);
+        }
+        .toast.warning {
+            border-left: 3px solid var(--accent-gold);
+        }
+        .toast.info {
+            border-left: 3px solid var(--accent-cyan);
+        }
+        @keyframes slideDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        @keyframes slideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ===== LOGIN ===== */
+        .login-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            min-height: 100dvh;
+            padding: 20px;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--bg-card);
+            backdrop-filter: blur(24px) saturate(1.4);
+            -webkit-backdrop-filter: blur(24px) saturate(1.4);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 40px 32px 36px;
+            box-shadow: var(--shadow-glow), 0 20px 60px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 20%, rgba(0, 212, 255, 0.03), transparent 60%),
+                radial-gradient(ellipse at 70% 80%, rgba(168, 85, 247, 0.03), transparent 60%);
+            pointer-events: none;
+        }
+        .login-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+            position: relative;
+        }
+        .login-logo svg {
+            width: 72px;
+            height: 72px;
+            filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.12));
+            animation: floatPulse 3s ease-in-out infinite;
+        }
+        @keyframes floatPulse {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+        .login-title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, #f0f0ff 0%, #a8a8c8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .login-sub {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+        .form-group .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1.5px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+        .form-group .input-wrap:focus-within {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.08), 0 0 20px rgba(0, 212, 255, 0.04);
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .form-group .input-wrap .icon {
+            flex-shrink: 0;
+            width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+        .form-group .input-wrap:focus-within .icon {
+            color: var(--accent-cyan);
+        }
+        .form-group .input-wrap input {
+            width: 100%;
+            padding: 14px 16px 14px 0;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: var(--font);
+            font-weight: 500;
+        }
+        .form-group .input-wrap input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 14px;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border: none;
+            border-radius: var(--radius-sm);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: var(--font);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 212, 255, 0.25);
+        }
+        .login-btn:active {
+            transform: scale(0.98);
+        }
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .login-status {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+            min-height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .login-status .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .login-status.success {
+            color: var(--accent-emerald);
+        }
+        .login-status.error {
+            color: var(--accent-crimson);
+        }
+        .login-status.waiting {
+            color: var(--accent-gold);
+        }
+        .login-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+        .login-footer .brand-dot {
+            color: var(--accent-cyan);
+        }
+
+        /* ===== DASHBOARD ===== */
+        .dash-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 8px 0 20px;
+        }
+        .dash-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px) saturate(1.3);
+            -webkit-backdrop-filter: blur(20px) saturate(1.3);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-glow);
+        }
+        .dash-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .dash-brand svg {
+            width: 40px;
+            height: 40px;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.15));
+        }
+        .dash-brand .brand-text {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #fbbf24);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s linear infinite;
+        }
+        @keyframes shimmer {
+            0% {
+                background-position: -200% center;
+            }
+            100% {
+                background-position: 200% center;
+            }
+        }
+        .dash-brand .brand-sub {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            -webkit-text-fill-color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+        .dash-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .tunnel-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px 6px 10px;
+            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .tunnel-status .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            transition: var(--transition);
+        }
+        .tunnel-status .dot.online {
+            background: var(--accent-emerald);
+            box-shadow: 0 0 12px rgba(52, 211, 153, 0.4);
+        }
+        .tunnel-status .dot.offline {
+            background: var(--accent-crimson);
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+        }
+        .logout-btn {
+            padding: 8px 18px;
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 40px;
+            color: var(--accent-crimson);
+            font-size: 12px;
+            font-weight: 600;
+            font-family: var(--font);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            transform: scale(1.03);
+        }
+
+        .dash-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+        @media (max-width: 1024px) {
+            .dash-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .feed-section {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px) saturate(1.3);
+            -webkit-backdrop-filter: blur(20px) saturate(1.3);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow-glow);
+            display: flex;
+            flex-direction: column;
+            min-height: 500px;
+        }
+        .feed-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .feed-header .title {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .feed-header .title .badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 40px;
+            background: rgba(0, 212, 255, 0.12);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            -webkit-text-fill-color: var(--accent-cyan);
+        }
+        .feed-header .count {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .feed-header .count strong {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+        .feed-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 280px;
+        }
+        .feed-search input {
+            flex: 1;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: var(--font);
+            outline: none;
+            transition: var(--transition);
+        }
+        .feed-search input::placeholder {
+            color: var(--text-muted);
+        }
+        .feed-search input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.06);
+        }
+        .feed-search .search-btn {
+            padding: 10px 16px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border: none;
+            border-radius: var(--radius-sm);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: var(--font);
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .feed-search .search-btn:hover {
+            transform: scale(1.04);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
+        }
+        .feed-search .search-btn:active {
+            transform: scale(0.96);
+        }
+        .feed-list {
+            flex: 1;
+            overflow-y: auto;
+            max-height: 580px;
+            padding-right: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .feed-list .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .feed-list .empty svg {
+            opacity: 0.2;
+            margin-bottom: 12px;
+        }
+
+        .otp-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            transition: var(--transition);
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .otp-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.08);
+            transform: translateX(4px);
+        }
+        .otp-card .info {
+            flex: 1;
+            min-width: 140px;
+        }
+        .otp-card .info .line {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .otp-card .info .line .platform {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .otp-card .info .line .flag {
+            font-size: 16px;
+        }
+        .otp-card .info .line .short {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .otp-card .info .sensor-line {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .otp-card .info .sensor-line .phone-icon {
+            opacity: 0.5;
+        }
+        .otp-card .info .sensor-line .sensor {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .otp-card .info .tags {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 3px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .otp-card .info .tags .hashtag {
+            color: var(--accent-cyan);
+            opacity: 0.7;
+        }
+        .otp-card .info .tags .king {
+            color: var(--accent-gold);
+            font-weight: 700;
+            opacity: 0.8;
+        }
+        .otp-card .otp-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .otp-card .otp-box .code {
+            font-size: 24px;
+            font-weight: 800;
+            font-family: 'Inter', monospace;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .otp-card .otp-box .timer {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-variant-numeric: tabular-nums;
+            min-width: 32px;
+            text-align: center;
+        }
+        .otp-card .otp-box .timer.warning {
+            color: var(--accent-gold);
+            animation: pulse 1s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(0.96);
+                opacity: 0.7;
+            }
+        }
+        .otp-card .otp-box .copy-btn {
+            padding: 6px 14px;
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.12);
+            border-radius: 40px;
+            color: var(--accent-cyan);
+            font-size: 12px;
+            font-weight: 600;
+            font-family: var(--font);
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .otp-card .otp-box .copy-btn:hover {
+            background: rgba(0, 212, 255, 0.16);
+            transform: scale(1.04);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+        }
+        .otp-card .otp-box .copy-btn:active {
+            transform: scale(0.94);
+        }
+        .otp-card .otp-box .copy-btn.copied {
+            background: rgba(52, 211, 153, 0.15);
+            border-color: rgba(52, 211, 153, 0.2);
+            color: var(--accent-emerald);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .status-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .status-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px) saturate(1.3);
+            -webkit-backdrop-filter: blur(20px) saturate(1.3);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            box-shadow: var(--shadow-glow);
+        }
+        .status-card .sc-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .status-card .sc-title .icon {
+            opacity: 0.5;
+        }
+        .status-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 13px;
+        }
+        .status-item:last-child {
+            border-bottom: none;
+        }
+        .status-item .label {
+            color: var(--text-secondary);
+        }
+        .status-item .value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .status-item .value .highlight {
+            color: var(--accent-cyan);
+        }
+        .status-item .value .gold {
+            color: var(--accent-gold);
+        }
+        .user-list {
+            max-height: 140px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .user-list .user-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .user-list .user-item .avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(168, 85, 247, 0.15));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            flex-shrink: 0;
+        }
+        .user-list .user-item .uname {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .user-list .user-item .ustatus {
+            font-size: 10px;
+            padding: 1px 8px;
+            border-radius: 40px;
+            background: rgba(52, 211, 153, 0.1);
+            color: var(--accent-emerald);
+            border: 1px solid rgba(52, 211, 153, 0.1);
+            margin-left: auto;
+        }
+        .status-card .tunnel-url {
+            font-size: 12px;
+            color: var(--text-muted);
+            word-break: break-all;
+            padding: 8px 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            margin-top: 4px;
+            font-family: 'Inter', monospace;
+        }
+        .status-card .tunnel-url .label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .status-card .tunnel-url .url {
+            color: var(--accent-cyan);
+            opacity: 0.7;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            #app {
+                padding: 10px;
+            }
+            .login-card {
+                padding: 28px 20px 24px;
+            }
+            .login-title {
+                font-size: 22px;
+            }
+            .dash-header {
+                padding: 12px 16px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .dash-brand .brand-text {
+                font-size: 18px;
+            }
+            .dash-actions {
+                justify-content: space-between;
+            }
+            .feed-section {
+                padding: 14px;
+                min-height: 380px;
+            }
+            .feed-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .feed-search {
+                max-width: 100%;
+            }
+            .feed-list {
+                max-height: 420px;
+            }
+            .otp-card {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .otp-card .otp-box {
+                justify-content: space-between;
+            }
+            .otp-card .otp-box .code {
+                font-size: 20px;
+            }
+            .status-sidebar {
+                order: -1;
+            }
+            .dash-grid {
+                grid-template-columns: 1fr;
+            }
+            .toast-container {
+                top: 12px;
+                right: 12px;
+                max-width: calc(100% - 24px);
+            }
+            .toast {
+                font-size: 13px;
+                padding: 12px 16px;
+            }
+        }
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 24px 16px 20px;
+            }
+            .login-title {
+                font-size: 20px;
+            }
+            .form-group .input-wrap input {
+                font-size: 14px;
+                padding: 12px 12px 12px 0;
+            }
+            .login-btn {
+                font-size: 15px;
+                padding: 14px;
+            }
+            .dash-brand .brand-text {
+                font-size: 16px;
+            }
+            .dash-brand svg {
+                width: 32px;
+                height: 32px;
+            }
+            .tunnel-status {
+                font-size: 10px;
+                padding: 4px 10px 4px 8px;
+            }
+            .logout-btn {
+                font-size: 10px;
+                padding: 6px 14px;
+            }
+            .otp-card .otp-box .code {
+                font-size: 18px;
+            }
+            .otp-card .otp-box .copy-btn {
+                font-size: 10px;
+                padding: 4px 10px;
+            }
+        }
+
+        /* ===== UTILITY ===== */
+        .hidden {
+            display: none !important;
+        }
+        .gap-1 {
+            gap: 4px;
+        }
+        .flex {
+            display: flex;
+        }
+        .flex-center {
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- TOAST CONTAINER -->
+        <div class="toast-container" id="toastContainer"></div>
+
+        <!-- PAGE LOGIN -->
+        <div class="page active" id="pageLogin">
+            <div class="login-wrapper">
+                <div class="login-card">
+                    <div class="login-logo">
+                        <!-- Logo CSS (SVG) tanpa emoji -->
+                        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="40" cy="40" r="36" stroke="url(#lgGrad)" stroke-width="1.5" opacity="0.15"/>
+                            <circle cx="40" cy="40" r="28" stroke="url(#lgGrad)" stroke-width="1" opacity="0.08"/>
+                            <path d="M40 12C31.1634 12 24 19.1634 24 28C24 36.8366 31.1634 44 40 44C48.8366 44 56 36.8366 56 28C56 19.1634 48.8366 12 40 12Z" stroke="url(#lgGrad)" stroke-width="1.8" opacity="0.3"/>
+                            <path d="M40 24C37.7909 24 36 25.7909 36 28C36 30.2091 37.7909 32 40 32C42.2091 32 44 30.2091 44 28C44 25.7909 42.2091 24 40 24Z" fill="url(#lgGrad)"/>
+                            <path d="M28 44L32 52L40 56L48 52L52 44" stroke="url(#lgGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+                            <path d="M40 56V64" stroke="url(#lgGrad)" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+                            <path d="M34 62L40 64L46 62" stroke="url(#lgGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.2"/>
+                            <defs>
+                                <linearGradient id="lgGrad" x1="16" y1="16" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#00d4ff"/>
+                                    <stop offset="100%" stop-color="#a855f7"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="login-title">Login Akun</div>
+                    <div class="login-sub">Masuk ke dashboard</div>
+                    <form id="loginForm" autocomplete="off">
+                        <div class="form-group">
+                            <label>Username</label>
+                            <div class="input-wrap">
+                                <span class="icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                </span>
+                                <input type="text" id="loginUser" placeholder="Masukkan username" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-wrap">
+                                <span class="icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                </span>
+                                <input type="password" id="loginPass" placeholder="Masukkan password" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="login-btn" id="loginBtn">
+                            <span>Login</span>
+                        </button>
+                    </form>
+                    <div class="login-status" id="loginStatus">
+                        <span>Silakan masukkan kredensial</span>
+                    </div>
+                    <div class="login-footer">
+                        <span class="brand-dot">◆</span> KING ANNAS SYSTEM <span class="brand-dot">◆</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE DASHBOARD -->
+        <div class="page" id="pageDashboard">
+            <div class="dash-wrapper">
+                <!-- HEADER -->
+                <header class="dash-header">
+                    <div class="dash-brand">
+                        <!-- Logo SVG tanpa emoji -->
+                        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="32" cy="32" r="28" stroke="url(#dgGrad)" stroke-width="1.2" opacity="0.15"/>
+                            <path d="M32 8C24.8 8 19 13.8 19 21C19 28.2 24.8 34 32 34C39.2 34 45 28.2 45 21C45 13.8 39.2 8 32 8Z" stroke="url(#dgGrad)" stroke-width="1.5" opacity="0.25"/>
+                            <path d="M32 18C30.3 18 29 19.3 29 21C29 22.7 30.3 24 32 24C33.7 24 35 22.7 35 21C35 19.3 33.7 18 32 18Z" fill="url(#dgGrad)"/>
+                            <path d="M22 36L26 44L32 48L38 44L42 36" stroke="url(#dgGrad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+                            <path d="M32 48V56" stroke="url(#dgGrad)" stroke-width="1.8" stroke-linecap="round" opacity="0.25"/>
+                            <path d="M27 54L32 56L37 54" stroke="url(#dgGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.15"/>
+                            <defs>
+                                <linearGradient id="dgGrad" x1="12" y1="12" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#fbbf24"/>
+                                    <stop offset="100%" stop-color="#f59e0b"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div>
+                            <div class="brand-text">KING ANNAS</div>
+                            <div class="brand-sub">DASHBOARD OTP</div>
+                        </div>
+                    </div>
+                    <div class="dash-actions">
+                        <div class="tunnel-status" id="tunnelStatus">
+                            <span class="dot offline" id="tunnelDot"></span>
+                            <span id="tunnelLabel">Tunnel Offline</span>
+                        </div>
+                        <button class="logout-btn" id="logoutBtn">Keluar</button>
+                    </div>
+                </header>
+
+                <!-- GRID -->
+                <div class="dash-grid">
+                    <!-- FEED -->
+                    <section class="feed-section">
+                        <div class="feed-header">
+                            <div class="title">
+                                <span>Live Feed</span>
+                                <span class="badge" id="liveBadge">● LIVE</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;width:100%;">
+                                <span class="count">Total OTP: <strong id="totalOtpCount">0</strong></span>
+                                <div class="feed-search">
+                                    <input type="text" id="searchInput" placeholder="Cari 4 angka terakhir..." maxlength="4" inputmode="numeric">
+                                    <button class="search-btn" id="searchBtn">Cari</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feed-list" id="feedList">
+                            <div class="empty">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                                <div style="margin-top:8px;">Belum ada data OTP</div>
+                                <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Tunggu notifikasi masuk</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- SIDEBAR -->
+                    <aside class="status-sidebar">
+                        <div class="status-card">
+                            <div class="sc-title">
+                                <span class="icon">📊</span> Statistik
+                            </div>
+                            <div class="status-item">
+                                <span class="label">Total OTP</span>
+                                <span class="value"><span class="highlight" id="statTotal">0</span></span>
+                            </div>
+                            <div class="status-item">
+                                <span class="label">Pengguna Online</span>
+                                <span class="value"><span class="gold" id="statUsers">1</span></span>
+                            </div>
+                            <div class="status-item">
+                                <span class="label">Status Tunnel</span>
+                                <span class="value" id="statTunnel">Offline</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="label">Uptime</span>
+                                <span class="value" id="statUptime">00:00:00</span>
+                            </div>
+                        </div>
+
+                        <div class="status-card">
+                            <div class="sc-title">
+                                <span class="icon">👥</span> Pengguna Aktif
+                            </div>
+                            <div class="user-list" id="userList">
+                                <div class="user-item">
+                                    <span class="avatar">A</span>
+                                    <span class="uname">annasnas</span>
+                                    <span class="ustatus">Admin</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="status-card">
+                            <div class="sc-title">
+                                <span class="icon">🔌</span> Koneksi API
+                            </div>
+                            <div class="tunnel-url">
+                                <div class="label">Endpoint</div>
+                                <div class="url" id="tunnelUrlDisplay">https://princess-steve-armstrong-york.trycloudflare.com</div>
+                            </div>
+                            <div style="margin-top:10px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);">
+                                <span id="tunnelPing">●</span>
+                                <span id="tunnelPingText">Menghubungi...</span>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ===== CONFIG =====
+            const TUNNEL_URL = 'https://princess-steve-armstrong-york.trycloudflare.com';
+            const ADMIN_USER = 'annasnas';
+            const ADMIN_PASS = 'annas1230';
+            const API_BASE = TUNNEL_URL;
+
+            // ===== STATE =====
+            let isLoggedIn = false;
+            let otpData = [];
+            let filteredData = [];
+            let totalOtp = 0;
+            let isSearching = false;
+            let sessionUser = '';
+            let uptimeSeconds = 0;
+            let tunnelOnline = false;
+            let otpInterval = null;
+            let tunnelCheckInterval = null;
+            let uptimeInterval = null;
+
+            // ===== DOM REFS =====
+            const pageLogin = document.getElementById('pageLogin');
+            const pageDash = document.getElementById('pageDashboard');
+            const loginForm = document.getElementById('loginForm');
+            const loginUser = document.getElementById('loginUser');
+            const loginPass = document.getElementById('loginPass');
+            const loginBtn = document.getElementById('loginBtn');
+            const loginStatus = document.getElementById('loginStatus');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const feedList = document.getElementById('feedList');
+            const totalOtpCount = document.getElementById('totalOtpCount');
+            const statTotal = document.getElementById('statTotal');
+            const statUsers = document.getElementById('statUsers');
+            const statTunnel = document.getElementById('statTunnel');
+            const statUptime = document.getElementById('statUptime');
+            const tunnelDot = document.getElementById('tunnelDot');
+            const tunnelLabel = document.getElementById('tunnelLabel');
+            const tunnelUrlDisplay = document.getElementById('tunnelUrlDisplay');
+            const tunnelPing = document.getElementById('tunnelPing');
+            const tunnelPingText = document.getElementById('tunnelPingText');
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const liveBadge = document.getElementById('liveBadge');
+            const userList = document.getElementById('userList');
+
+            // ===== TOAST =====
+            function showToast(message, type = 'info', duration = 3500) {
+                const container = document.getElementById('toastContainer');
+                const icons = {
+                    success: '✓',
+                    error: '✕',
+                    warning: '⚠',
+                    info: '●'
+                };
+                const colors = {
+                    success: 'var(--accent-emerald)',
+                    error: 'var(--accent-crimson)',
+                    warning: 'var(--accent-gold)',
+                    info: 'var(--accent-cyan)'
+                };
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.style.borderLeftColor = colors[type] || colors.info;
+                toast.innerHTML = `
+                    <span class="toast-icon">${icons[type] || '●'}</span>
+                    <span class="toast-msg">${message}</span>
+                    <button class="toast-close" aria-label="Tutup">✕</button>
+                `;
+                toast.querySelector('.toast-close').addEventListener('click', function() {
+                    toast.classList.add('hide');
+                    setTimeout(() => toast.remove(), 400);
+                });
+                container.appendChild(toast);
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.classList.add('hide');
+                        setTimeout(() => toast.remove(), 400);
+                    }
+                }, duration);
+                return toast;
+            }
+
+            // ===== API HELPERS =====
+            async function apiFetch(endpoint, options = {}) {
+                const url = API_BASE + endpoint;
+                const headers = {
+                    'Content-Type': 'application/json',
+                    ...(options.headers || {})
+                };
+                const config = { ...options, headers };
+                try {
+                    const res = await fetch(url, config);
+                    const data = await res.json().catch(() => ({}));
+                    return { ok: res.ok, status: res.status, data };
+                } catch (e) {
+                    return { ok: false, status: 0, data: { error: 'Network error' }, error: e };
+                }
+            }
+
+            async function checkTunnel() {
+                try {
+                    const res = await fetch(API_BASE + '/api/status', {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' },
+                        signal: AbortSignal.timeout ? AbortSignal.timeout(4000) : undefined
+                    });
+                    if (res.ok) {
+                        const data = await res.json().catch(() => ({}));
+                        return { online: true, data };
+                    }
+                    return { online: false, data: {} };
+                } catch (e) {
+                    return { online: false, data: {} };
+                }
+            }
+
+            // ===== OTP DATA =====
+            async function fetchOtpData() {
+                if (!isLoggedIn) return;
+                try {
+                    const res = await apiFetch('/api/otp');
+                    if (res.ok && res.data && Array.isArray(res.data.otps)) {
+                        const newOtps = res.data.otps;
+                        const existingIds = new Set(otpData.map(o => o.id));
+                        for (const otp of newOtps) {
+                            if (!existingIds.has(otp.id)) {
+                                otpData.unshift(otp);
+                                existingIds.add(otp.id);
+                                showToast(`OTP baru: ${otp.otp || '---'} dari ${otp.platform || 'Unknown'}`, 'success', 3000);
+                            }
+                        }
+                        if (otpData.length > 500) otpData = otpData.slice(0, 500);
+                        totalOtp = otpData.length;
+                        updateFeed();
+                        updateStats();
+                    }
+                } catch (e) { /* silent */ }
+            }
+
+            // ===== UPDATE FEED =====
+            function updateFeed() {
+                const data = isSearching ? filteredData : otpData;
+                const count = data.length;
+                totalOtpCount.textContent = otpData.length;
+
+                if (count === 0) {
+                    feedList.innerHTML = `
+                        <div class="empty">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                            <div style="margin-top:8px;">${isSearching ? 'Tidak ditemukan' : 'Belum ada data OTP'}</div>
+                            <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">${isSearching ? 'Coba kata kunci lain' : 'Tunggu notifikasi masuk'}</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                for (const item of data) {
+                    const otpCode = item.otp || '------';
+                    const platform = item.platform || 'WhatsApp';
+                    const flag = item.flag || '🏳️';
+                    const short = item.short || 'UN';
+                    const sensor = item.sensor || '****';
+                    const hashtag = item.hashtag || '#unknown';
+                    const kingTag = item.kingTag || '#KingAnnas';
+                    const id = item.id || 'id-' + Math.random().toString(36).substr(2, 6);
+                    const timerVal = item.timer || 30;
+                    const timerClass = timerVal <= 10 ? 'warning' : '';
+
+                    html += `
+                        <div class="otp-card" data-id="${id}">
+                            <div class="info">
+                                <div class="line">
+                                    <span class="platform">${platform}</span>
+                                    <span class="dot-sep">•</span>
+                                    <span class="flag">${flag}</span>
+                                    <span class="short">${short}</span>
+                                </div>
+                                <div class="sensor-line">
+                                    <span class="phone-icon">📞</span>
+                                    <span class="sensor">${sensor}</span>
+                                </div>
+                                <div class="tags">
+                                    <span class="hashtag">${hashtag}</span>
+                                    <span class="king">👑 ${kingTag}</span>
+                                </div>
+                            </div>
+                            <div class="otp-box">
+                                <span class="code">${otpCode}</span>
+                                <span class="timer ${timerClass}" data-timer="${timerVal}">${timerVal}s</span>
+                                <button class="copy-btn" data-otp="${otpCode}">Salin</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                feedList.innerHTML = html;
+
+                // Copy buttons
+                feedList.querySelectorAll('.copy-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const code = this.getAttribute('data-otp');
+                        if (code) {
+                            navigator.clipboard.writeText(code).then(() => {
+                                this.textContent = '✔ Tersalin';
+                                this.classList.add('copied');
+                                showToast(`OTP ${code} disalin!`, 'success', 2000);
+                                setTimeout(() => {
+                                    this.textContent = 'Salin';
+                                    this.classList.remove('copied');
+                                }, 2000);
+                            }).catch(() => {
+                                const ta = document.createElement('textarea');
+                                ta.value = code;
+                                document.body.appendChild(ta);
+                                ta.select();
+                                document.execCommand('copy');
+                                ta.remove();
+                                this.textContent = '✔ Tersalin';
+                                this.classList.add('copied');
+                                showToast(`OTP ${code} disalin!`, 'success', 2000);
+                                setTimeout(() => {
+                                    this.textContent = 'Salin';
+                                    this.classList.remove('copied');
+                                }, 2000);
+                            });
+                        }
+                    });
+                });
+
+                // Timers
+                feedList.querySelectorAll('.timer').forEach(el => {
+                    let val = parseInt(el.getAttribute('data-timer')) || 30;
+                    const interval = setInterval(() => {
+                        val = Math.max(0, val - 1);
+                        el.textContent = val + 's';
+                        el.setAttribute('data-timer', val);
+                        if (val <= 10) el.classList.add('warning');
+                        else el.classList.remove('warning');
+                        if (val <= 0) {
+                            clearInterval(interval);
+                            el.textContent = '0s';
+                        }
+                    }, 1000);
+                    el._timerInterval = interval;
+                });
+            }
+
+            // ===== UPDATE STATS =====
+            function updateStats() {
+                statTotal.textContent = otpData.length;
+                // Simulate users: admin + any pending approved
+                const users = ['annasnas'];
+                statUsers.textContent = users.length;
+                let ulHtml = '';
+                users.forEach((u, i) => {
+                    const initial = u.charAt(0).toUpperCase();
+                    const isAdmin = u === 'annasnas';
+                    ulHtml += `
+                        <div class="user-item">
+                            <span class="avatar">${initial}</span>
+                            <span class="uname">${u}</span>
+                            <span class="ustatus">${isAdmin ? 'Admin' : 'User'}</span>
+                        </div>
+                    `;
+                });
+                userList.innerHTML = ulHtml || '<div style="color:var(--text-muted);font-size:13px;">Tidak ada pengguna</div>';
+            }
+
+            // ===== SEARCH =====
+            function performSearch() {
+                const query = searchInput.value.trim();
+                if (!query) {
+                    isSearching = false;
+                    filteredData = [];
+                    updateFeed();
+                    return;
+                }
+                isSearching = true;
+                const q = query.toLowerCase();
+                filteredData = otpData.filter(item => {
+                    const sensor = (item.sensor || '').toLowerCase();
+                    const phone = (item.phone || '').toLowerCase();
+                    const otp = (item.otp || '').toLowerCase();
+                    return sensor.includes(q) || phone.includes(q) || otp.includes(q);
+                });
+                updateFeed();
+                if (filteredData.length === 0) {
+                    showToast(`Tidak ditemukan untuk "${query}"`, 'warning', 2500);
+                } else {
+                    showToast(`Ditemukan ${filteredData.length} OTP untuk "${query}"`, 'info', 2000);
+                }
+            }
+
+            // ===== TUNNEL STATUS =====
+            async function updateTunnelStatus() {
+                const result = await checkTunnel();
+                tunnelOnline = result.online;
+                if (tunnelOnline) {
+                    tunnelDot.className = 'dot online';
+                    tunnelLabel.textContent = 'Tunnel Online';
+                    statTunnel.textContent = 'Online';
+                    statTunnel.style.color = 'var(--accent-emerald)';
+                    tunnelPing.textContent = '●';
+                    tunnelPing.style.color = 'var(--accent-emerald)';
+                    tunnelPingText.textContent = 'Terhubung';
+                    liveBadge.textContent = '● LIVE';
+                    liveBadge.style.color = 'var(--accent-emerald)';
+                    liveBadge.style.borderColor = 'rgba(52,211,153,0.2)';
+                    liveBadge.style.background = 'rgba(52,211,153,0.08)';
+                } else {
+                    tunnelDot.className = 'dot offline';
+                    tunnelLabel.textContent = 'Tunnel Offline';
+                    statTunnel.textContent = 'Offline';
+                    statTunnel.style.color = 'var(--accent-crimson)';
+                    tunnelPing.textContent = '●';
+                    tunnelPing.style.color = 'var(--accent-crimson)';
+                    tunnelPingText.textContent = 'Tidak terhubung';
+                    liveBadge.textContent = '● OFFLINE';
+                    liveBadge.style.color = 'var(--accent-crimson)';
+                    liveBadge.style.borderColor = 'rgba(239,68,68,0.2)';
+                    liveBadge.style.background = 'rgba(239,68,68,0.08)';
+                }
+                tunnelUrlDisplay.textContent = TUNNEL_URL;
+            }
+
+            // ===== UPTIME =====
+            function updateUptime() {
+                uptimeSeconds++;
+                const h = String(Math.floor(uptimeSeconds / 3600)).padStart(2, '0');
+                const m = String(Math.floor((uptimeSeconds % 3600) / 60)).padStart(2, '0');
+                const s = String(uptimeSeconds % 60).padStart(2, '0');
+                statUptime.textContent = `${h}:${m}:${s}`;
+            }
+
+            // ===== LOGIN =====
+            async function handleLogin(e) {
+                e.preventDefault();
+                const user = loginUser.value.trim();
+                const pass = loginPass.value.trim();
+
+                if (!user || !pass) {
+                    loginStatus.className = 'login-status error';
+                    loginStatus.innerHTML = '⚠ Username dan password wajib diisi';
+                    return;
+                }
+
+                loginBtn.disabled = true;
+                loginBtn.querySelector('span').textContent = 'Memproses...';
+                loginStatus.className = 'login-status waiting';
+                loginStatus.innerHTML = '<span class="spinner"></span> Mengirim permintaan...';
+
+                try {
+                    const res = await apiFetch('/api/login', {
+                        method: 'POST',
+                        body: JSON.stringify({ username: user, password: pass })
+                    });
+
+                    if (res.ok && res.data && res.data.success) {
+                        if (res.data.approved || res.data.direct) {
+                            loginSuccess(user);
+                        } else if (res.data.pending) {
+                            loginStatus.className = 'login-status waiting';
+                            loginStatus.innerHTML = '⏳ Permintaan login dikirim. Tunggu persetujuan admin...';
+                            showToast('Permintaan login dikirim ke admin. Tunggu sebentar.', 'warning', 4000);
+                            let attempts = 0;
+                            const maxAttempts = 30;
+                            const pollInterval = setInterval(async () => {
+                                attempts++;
+                                try {
+                                    const checkRes = await apiFetch('/api/login/check?username=' +
+                                        encodeURIComponent(user));
+                                    if (checkRes.ok && checkRes.data && checkRes.data.approved) {
+                                        clearInterval(pollInterval);
+                                        loginSuccess(user);
+                                        showToast('✅ Akun disetujui! Selamat datang.', 'success', 3000);
+                                    } else if (checkRes.data && checkRes.data.rejected) {
+                                        clearInterval(pollInterval);
+                                        loginStatus.className = 'login-status error';
+                                        loginStatus.innerHTML = '❌ Login ditolak oleh admin.';
+                                        showToast('Login ditolak oleh admin.', 'error', 3000);
+                                        loginBtn.disabled = false;
+                                        loginBtn.querySelector('span').textContent = 'Login';
+                                    }
+                                } catch (e) { /* silent */ }
+                                if (attempts >= maxAttempts) {
+                                    clearInterval(pollInterval);
+                                    loginStatus.className = 'login-status waiting';
+                                    loginStatus.innerHTML = '⏳ Waktu tunggu habis. Coba login ulang.';
+                                    showToast('Waktu tunggu habis. Coba lagi.', 'error', 3000);
+                                    loginBtn.disabled = false;
+                                    loginBtn.querySelector('span').textContent = 'Login';
+                                }
+                            }, 3000);
+                        } else {
+                            const errMsg = res.data?.message || 'Login gagal.';
+                            loginStatus.className = 'login-status error';
+                            loginStatus.innerHTML = '❌ ' + errMsg;
+                            showToast(errMsg, 'error', 3000);
+                            loginBtn.disabled = false;
+                            loginBtn.querySelector('span').textContent = 'Login';
+                        }
+                    } else {
+                        const errMsg = res.data?.message || 'Login gagal. Periksa kredensial.';
+                        loginStatus.className = 'login-status error';
+                        loginStatus.innerHTML = '❌ ' + errMsg;
+                        showToast(errMsg, 'error', 3000);
+                        loginBtn.disabled = false;
+                        loginBtn.querySelector('span').textContent = 'Login';
+                    }
+                } catch (err) {
+                    loginStatus.className = 'login-status error';
+                    loginStatus.innerHTML = '❌ Gagal terhubung ke server. Pastikan tunnel aktif.';
+                    showToast('Gagal terhubung ke server.', 'error', 3000);
+                    loginBtn.disabled = false;
+                    loginBtn.querySelector('span').textContent = 'Login';
+                }
+            }
+
+            function loginSuccess(user) {
+                isLoggedIn = true;
+                sessionUser = user;
+                loginStatus.className = 'login-status success';
+                loginStatus.innerHTML = '✅ Login berhasil!';
+                showToast('Selamat datang, ' + user + '!', 'success', 2500);
+
+                pageLogin.classList.remove('active');
+                pageDash.classList.add('active');
+
+                initDashboard();
+            }
+
+            // ===== LOGOUT =====
+            function handleLogout() {
+                isLoggedIn = false;
+                sessionUser = '';
+                otpData = [];
+                filteredData = [];
+                totalOtp = 0;
+                if (uptimeInterval) clearInterval(uptimeInterval);
+                if (tunnelCheckInterval) clearInterval(tunnelCheckInterval);
+                if (otpInterval) clearInterval(otpInterval);
+                // clear timer intervals on cards
+                document.querySelectorAll('.timer').forEach(el => {
+                    if (el._timerInterval) clearInterval(el._timerInterval);
+                });
+                feedList.innerHTML = `
+                    <div class="empty">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                        <div style="margin-top:8px;">Sesi berakhir</div>
+                    </div>
+                `;
+                pageDash.classList.remove('active');
+                pageLogin.classList.add('active');
+                loginBtn.disabled = false;
+                loginBtn.querySelector('span').textContent = 'Login';
+                loginStatus.className = 'login-status';
+                loginStatus.innerHTML = 'Silakan masukkan kredensial';
+                showToast('Anda telah keluar.', 'info', 2000);
+            }
+
+            // ===== DASHBOARD INIT =====
+            function initDashboard() {
+                updateTunnelStatus();
+                if (tunnelCheckInterval) clearInterval(tunnelCheckInterval);
+                tunnelCheckInterval = setInterval(updateTunnelStatus, 15000);
+
+                uptimeSeconds = 0;
+                if (uptimeInterval) clearInterval(uptimeInterval);
+                uptimeInterval = setInterval(updateUptime, 1000);
+
+                fetchOtpData();
+                if (otpInterval) clearInterval(otpInterval);
+                otpInterval = setInterval(fetchOtpData, 3000);
+
+                updateStats();
+                showToast('🚀 Dashboard KING ANNAS siap!', 'info', 2500);
+            }
+
+            // ===== EVENT LISTENERS =====
+            loginForm.addEventListener('submit', handleLogin);
+            logoutBtn.addEventListener('click', handleLogout);
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    performSearch();
+                }
+            });
+            searchInput.addEventListener('input', function() {
+                if (!this.value.trim()) {
+                    isSearching = false;
+                    filteredData = [];
+                    updateFeed();
+                }
+            });
+
+            // ===== CLEANUP =====
+            window.addEventListener('beforeunload', function() {
+                if (otpInterval) clearInterval(otpInterval);
+                if (tunnelCheckInterval) clearInterval(tunnelCheckInterval);
+                if (uptimeInterval) clearInterval(uptimeInterval);
+                document.querySelectorAll('.timer').forEach(el => {
+                    if (el._timerInterval) clearInterval(el._timerInterval);
+                });
+            });
+
+        })();
+    </script>
+</body>
+</html>
