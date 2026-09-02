@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>KING ANNAS </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg-primary: #06050a;
+            --bg-secondary: #0d0b17;
+            --bg-card: rgba(16, 13, 28, 0.8);
+            --crimson: #dc143c;
+            --crimson-glow: #ff1a4a;
+            --gold: #f5c842;
+            --gold-glow: #ffd966;
+            --neon-cyan: #00f0ff;
+            --neon-purple: #b44aff;
+            --text-primary: #f0edf5;
+            --text-secondary: #b8b0c9;
+            --text-muted: #6a627a;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --shadow-glow: 0 8px 32px rgba(220, 20, 60, 0.12);
+            --radius: 24px;
+            --radius-sm: 14px;
+            --transition: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            --font-display: 'Orbitron', monospace;
+            --font-body: 'Inter', sans-serif;
+        }
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            min-height: 100dvh;
+            padding: 16px;
+            background-image: radial-gradient(ellipse at 10% 20%, rgba(220, 20, 60, 0.10) 0%, transparent 50%), radial-gradient(ellipse at 90% 80%, rgba(180, 74, 255, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(245, 200, 66, 0.04) 0%, transparent 60%);
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--crimson);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+        }
+        .app-container {
+            max-width: 940px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 0 40px 0;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .text-gold {
+            color: var(--gold);
+        }
+        .text-crimson {
+            color: var(--crimson);
+        }
+        .font-mono {
+            font-family: var(--font-display);
+        }
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+        .ripple::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.08), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+        .ripple:active::before {
+            opacity: 1;
+            transition: opacity 0s;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px 14px 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(1.4);
+            -webkit-backdrop-filter: blur(20px) saturate(1.4);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-glow), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            margin-bottom: 22px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius);
+            padding: 1px;
+            background: linear-gradient(135deg, var(--crimson), transparent 40%, var(--gold) 80%, var(--crimson));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            position: relative;
+            z-index: 1;
+        }
+        .logo-crown {
+            position: relative;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .crown-svg {
+            width: 48px;
+            height: 48px;
+            filter: drop-shadow(0 0 16px rgba(245, 200, 66, 0.35));
+            animation: crownPulse 3s ease-in-out infinite;
+        }
+        @keyframes crownPulse {
+            0%,
+            100% {
+                filter: drop-shadow(0 0 16px rgba(245, 200, 66, 0.35));
+            }
+            50% {
+                filter: drop-shadow(0 0 32px rgba(245, 200, 66, 0.65)) drop-shadow(0 0 60px rgba(220, 20, 60, 0.3));
+            }
+        }
+        .logo-text {
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: 1.7rem;
+            letter-spacing: 0.06em;
+            background: linear-gradient(135deg, var(--gold) 0%, #fce68a 30%, var(--crimson) 70%, var(--gold) 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmerText 5s ease-in-out infinite;
+            line-height: 1;
+        }
+        @keyframes shimmerText {
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        .logo-sub {
+            font-size: 0.5rem;
+            font-weight: 400;
+            letter-spacing: 0.35em;
+            color: var(--text-secondary);
+            -webkit-text-fill-color: var(--text-secondary);
+            background: none;
+            display: block;
+            margin-top: -3px;
+            opacity: 0.6;
+        }
+        .status-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.45);
+            padding: 6px 12px 6px 10px;
+            border-radius: 40px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(8px);
+            z-index: 1;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4caf50;
+            box-shadow: 0 0 14px rgba(76, 175, 80, 0.6);
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        .status-dot.disconnected {
+            background: #ef4444;
+            box-shadow: 0 0 14px rgba(239, 68, 68, 0.6);
+            animation: pulseRed 1.2s ease-in-out infinite;
+        }
+        @keyframes pulseRed {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+        }
+        .status-label {
+            text-transform: uppercase;
+            font-size: 0.5rem;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+        }
+        .status-value {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 0.6rem;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            padding: 4px 12px 4px 16px;
+            backdrop-filter: blur(8px);
+            transition: var(--transition);
+            min-width: 160px;
+        }
+        .search-box:focus-within {
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(245, 200, 66, 0.06);
+        }
+        .search-box input {
+            background: transparent;
+            border: none;
+            padding: 8px 0;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            width: 100%;
+            outline: none;
+            font-family: var(--font-body);
+            letter-spacing: 0.02em;
+        }
+        .search-box input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 0.65rem;
+        }
+        .search-box i {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+        .search-box:focus-within i {
+            color: var(--gold);
+        }
+        .feed-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(18px) saturate(1.3);
+            -webkit-backdrop-filter: blur(18px) saturate(1.3);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 22px 20px;
+            box-shadow: var(--shadow-glow), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .feed-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .feed-title i {
+            color: var(--gold);
+            font-size: 0.9rem;
+        }
+        .feed-count {
+            background: rgba(220, 20, 60, 0.15);
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--crimson);
+            border: 1px solid rgba(220, 20, 60, 0.12);
+            font-family: var(--font-display);
+        }
+        .feed-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            max-height: 460px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .feed-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-sm);
+            padding: 16px 18px;
+            border-left: 3px solid var(--crimson);
+            transition: var(--transition);
+            animation: slideInItem 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .feed-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: var(--gold);
+        }
+        .feed-item.highlight {
+            border-left-color: var(--gold);
+            background: rgba(245, 200, 66, 0.06);
+            box-shadow: 0 0 30px rgba(245, 200, 66, 0.04);
+        }
+        @keyframes slideInItem {
+            0% {
+                opacity: 0;
+                transform: translateY(12px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .feed-item .line1 {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+            font-size: 0.95rem;
+        }
+        .feed-item .line1 .platform {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .feed-item .line1 .dot {
+            color: var(--text-muted);
+            font-weight: 300;
+            letter-spacing: 0.1em;
+        }
+        .feed-item .line1 .flag {
+            font-size: 1.1rem;
+        }
+        .feed-item .line1 .short {
+            font-weight: 700;
+            color: var(--gold);
+        }
+        .feed-item .line2 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .feed-item .line2 .phone {
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: 0.02em;
+        }
+        .feed-item .line2 .sensor-icon {
+            color: var(--neon-cyan);
+            font-size: 0.8rem;
+        }
+        .feed-item .line3 {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 2px;
+        }
+        .feed-item .line3 .hashtag {
+            color: var(--neon-purple);
+            font-weight: 600;
+        }
+        .feed-item .line3 .king-tag {
+            color: var(--gold);
+            font-weight: 700;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            letter-spacing: 0.04em;
+        }
+        .feed-item .line3 .crown-icon {
+            color: var(--gold);
+            font-size: 0.85rem;
+            filter: drop-shadow(0 0 6px rgba(245, 200, 66, 0.3));
+        }
+        .otp-card {
+            margin-top: 10px;
+            background: linear-gradient(135deg, rgba(220, 20, 60, 0.08), rgba(245, 200, 66, 0.04));
+            border: 1px solid rgba(220, 20, 60, 0.15);
+            border-radius: var(--radius-sm);
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            animation: glowPulse 2.8s ease-in-out infinite;
+            transition: var(--transition);
+        }
+        .otp-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 40px rgba(220, 20, 60, 0.08);
+        }
+        @keyframes glowPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 6px rgba(220, 20, 60, 0.03);
+            }
+            50% {
+                box-shadow: 0 0 28px rgba(220, 20, 60, 0.12);
+            }
+        }
+        .otp-code {
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: 1.7rem;
+            letter-spacing: 0.14em;
+            color: var(--gold);
+            text-shadow: 0 0 24px rgba(245, 200, 66, 0.15);
+            background: rgba(0, 0, 0, 0.35);
+            padding: 2px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(245, 200, 66, 0.06);
+        }
+        .otp-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .btn-copy {
+            background: rgba(245, 200, 66, 0.08);
+            border: 1px solid rgba(245, 200, 66, 0.15);
+            color: var(--gold);
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            backdrop-filter: blur(4px);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-copy::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(245, 200, 66, 0.12), transparent 70%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .btn-copy:hover {
+            background: rgba(245, 200, 66, 0.16);
+            border-color: var(--gold);
+            transform: scale(1.03);
+            box-shadow: 0 0 32px rgba(245, 200, 66, 0.06);
+        }
+        .btn-copy:hover::after {
+            opacity: 1;
+        }
+        .btn-copy:active {
+            transform: scale(0.93);
+        }
+        .btn-copy i {
+            font-size: 0.8rem;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 44px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--text-muted);
+            opacity: 0.2;
+            margin-bottom: 14px;
+            display: block;
+        }
+        .empty-state p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .empty-state .hint {
+            font-size: 0.7rem;
+            margin-top: 10px;
+            opacity: 0.5;
+        }
+        .device-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(18px) saturate(1.3);
+            -webkit-backdrop-filter: blur(18px) saturate(1.3);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 16px 22px;
+            box-shadow: var(--shadow-glow);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .device-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .device-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--crimson), var(--neon-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+            box-shadow: 0 0 28px rgba(220, 20, 60, 0.2);
+        }
+        .device-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .device-detail .label {
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .device-detail .value {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .device-detail .value small {
+            font-weight: 400;
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+        }
+        .device-badge {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 40px;
+            padding: 6px 18px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .device-badge i {
+            color: var(--gold);
+        }
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 360px;
+            width: calc(100% - 40px);
+            pointer-events: none;
+        }
+        .toast {
+            background: rgba(10, 8, 18, 0.94);
+            backdrop-filter: blur(20px) saturate(1.5);
+            -webkit-backdrop-filter: blur(20px) saturate(1.5);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 14px 20px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            box-shadow: 0 16px 56px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.02);
+            pointer-events: auto;
+            animation: toastIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid var(--gold);
+        }
+        .toast.error {
+            border-left-color: var(--crimson);
+        }
+        .toast.success {
+            border-left-color: #4caf50;
+        }
+        .toast .toast-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .toast .toast-msg {
+            flex: 1;
+        }
+        @keyframes toastIn {
+            0% {
+                opacity: 0;
+                transform: translateX(40px) scale(0.92);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+        .toast-out {
+            animation: toastOut 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        @keyframes toastOut {
+            0% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(40px) scale(0.92);
+            }
+        }
+        .login-container {
+            max-width: 440px;
+            margin: 50px auto;
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(1.4);
+            -webkit-backdrop-filter: blur(24px) saturate(1.4);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 48px 36px 40px;
+            box-shadow: var(--shadow-glow), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        .login-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius);
+            padding: 1px;
+            background: linear-gradient(135deg, var(--crimson), transparent 40%, var(--gold) 80%, var(--crimson));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .login-container .logo-wrap {
+            justify-content: center;
+            margin-bottom: 28px;
+        }
+        .login-container .logo-text {
+            font-size: 2rem;
+        }
+        .login-container .logo-sub {
+            font-size: 0.55rem;
+        }
+        .login-container .login-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: -10px;
+            margin-bottom: 24px;
+            letter-spacing: 0.04em;
+            font-weight: 300;
+        }
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        .login-form .form-group {
+            text-align: left;
+        }
+        .login-form .form-group label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .login-form .form-group input {
+            width: 100%;
+            padding: 13px 18px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: var(--font-body);
+            transition: var(--transition);
+            outline: none;
+        }
+        .login-form .form-group input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 30px rgba(245, 200, 66, 0.05);
+        }
+        .login-form .form-group input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 0.8rem;
+        }
+        .btn-login {
+            padding: 15px;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--crimson), #b01030);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            font-family: var(--font-body);
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.06em;
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            box-shadow: 0 4px 24px rgba(220, 20, 60, 0.2);
+        }
+        .btn-login:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 40px rgba(220, 20, 60, 0.3);
+        }
+        .btn-login:active {
+            transform: scale(0.96);
+        }
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-login .btn-glow {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(245, 200, 66, 0.15), transparent 60%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .btn-login:hover .btn-glow {
+            opacity: 1;
+        }
+        .login-status {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            min-height: 28px;
+        }
+        .login-status .waiting {
+            color: var(--gold);
+        }
+        .login-status .error {
+            color: var(--crimson);
+        }
+        .login-status .success {
+            color: #4caf50;
+        }
+        .login-status .info {
+            color: var(--neon-cyan);
+        }
+        .login-footer-text {
+            margin-top: 22px;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            opacity: 0.4;
+            letter-spacing: 0.04em;
+        }
+
+        .admin-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(18px) saturate(1.3);
+            -webkit-backdrop-filter: blur(18px) saturate(1.3);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 22px 20px;
+            box-shadow: var(--shadow-glow);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+        .admin-panel .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .admin-panel .admin-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .admin-panel .admin-title i {
+            color: var(--gold);
+        }
+        .admin-panel .user-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .admin-panel .user-tag {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            padding: 4px 16px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .admin-panel .user-tag i {
+            color: var(--gold);
+            font-size: 0.6rem;
+        }
+        .admin-panel .user-count {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .admin-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .admin-actions .btn-sm {
+            padding: 4px 14px;
+            border-radius: 40px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-secondary);
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-body);
+        }
+        .admin-actions .btn-sm:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .waiting-overlay {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .waiting-overlay i {
+            font-size: 3.5rem;
+            color: var(--gold);
+            opacity: 0.5;
+            animation: pulseGold 1.8s ease-in-out infinite;
+            display: block;
+            margin-bottom: 20px;
+        }
+        @keyframes pulseGold {
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+        }
+        .waiting-overlay h2 {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .waiting-overlay p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .waiting-overlay .spinner {
+            display: inline-block;
+            width: 44px;
+            height: 44px;
+            border: 3px solid var(--glass-border);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            margin: 16px auto;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .footer-text {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+            opacity: 0.4;
+        }
+        .dashboard-version {
+            font-family: var(--font-display);
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            opacity: 0.3;
+            margin-top: 4px;
+        }
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-body);
+        }
+        .btn-logout:hover {
+            background: rgba(220, 20, 60, 0.1);
+            border-color: var(--crimson);
+            color: var(--crimson);
+        }
+        .tunnel-status-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 40px;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            border: 1px solid var(--glass-border);
+        }
+        .tunnel-status-bar .online {
+            color: #4caf50;
+        }
+        .tunnel-status-bar .offline {
+            color: var(--crimson);
+        }
+        .tunnel-status-bar i {
+            font-size: 0.7rem;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 10px;
+            }
+            .header {
+                padding: 12px 14px 12px 16px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .logo-crown {
+                width: 36px;
+                height: 36px;
+            }
+            .crown-svg {
+                width: 36px;
+                height: 36px;
+            }
+            .logo-text {
+                font-size: 1.2rem;
+            }
+            .logo-sub {
+                font-size: 0.4rem;
+            }
+            .status-wrap {
+                font-size: 0.5rem;
+                padding: 4px 8px 4px 6px;
+            }
+            .status-dot {
+                width: 8px;
+                height: 8px;
+            }
+            .search-box {
+                min-width: 120px;
+                padding: 2px 8px 2px 12px;
+            }
+            .search-box input {
+                font-size: 0.65rem;
+                padding: 6px 0;
+            }
+            .feed-card {
+                padding: 14px 12px;
+            }
+            .feed-item {
+                padding: 12px 12px;
+            }
+            .feed-item .line1 {
+                font-size: 0.8rem;
+            }
+            .feed-item .line2 {
+                font-size: 0.8rem;
+            }
+            .otp-code {
+                font-size: 1.3rem;
+                padding: 2px 10px;
+            }
+            .btn-copy {
+                padding: 6px 14px;
+                font-size: 0.65rem;
+            }
+            .device-card {
+                padding: 14px 16px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .device-info {
+                gap: 10px;
+            }
+            .device-icon {
+                width: 34px;
+                height: 34px;
+                font-size: 1rem;
+            }
+            .device-detail .value {
+                font-size: 0.75rem;
+            }
+            .toast-container {
+                top: 12px;
+                right: 12px;
+                width: calc(100% - 24px);
+                max-width: 100%;
+            }
+            .toast {
+                padding: 12px 16px;
+                font-size: 0.8rem;
+            }
+            .login-container {
+                margin: 30px auto;
+                padding: 32px 20px 28px;
+            }
+            .login-container .logo-text {
+                font-size: 1.5rem;
+            }
+            .admin-panel {
+                padding: 16px 14px;
+            }
+            .tunnel-status-bar {
+                font-size: 0.5rem;
+                padding: 6px 12px;
+            }
+        }
+        @media (max-width: 420px) {
+            .logo-text {
+                font-size: 1rem;
+            }
+            .status-wrap {
+                font-size: 0.45rem;
+                padding: 3px 6px;
+            }
+            .feed-item .line1 {
+                font-size: 0.7rem;
+            }
+            .otp-code {
+                font-size: 1.1rem;
+            }
+            .feed-title {
+                font-size: 0.7rem;
+            }
+            .feed-count {
+                font-size: 0.55rem;
+                padding: 2px 10px;
+            }
+            .search-box {
+                min-width: 100px;
+            }
+            .search-box input {
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container" id="app">
+
+        <div id="loginPage" class="login-container">
+            <div class="logo-wrap" style="justify-content:center;">
+                <span class="logo-crown">
+                    <svg class="crown-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 48L10 22L18 34L26 16L32 28L38 16L46 34L54 22L58 48H6Z" fill="url(#crownGrad)" stroke="url(#crownStroke)" stroke-width="1.5" />
+                        <path d="M12 48L14 40H50L52 48H12Z" fill="url(#crownGrad2)" stroke="url(#crownStroke2)" stroke-width="1" />
+                        <circle cx="32" cy="22" r="3" fill="#f5c842" stroke="#dc143c" stroke-width="1.2" />
+                        <circle cx="18" cy="30" r="2.5" fill="#f5c842" stroke="#dc143c" stroke-width="1" />
+                        <circle cx="46" cy="30" r="2.5" fill="#f5c842" stroke="#dc143c" stroke-width="1" />
+                        <path d="M22 48L26 40H38L42 48H22Z" fill="rgba(245,200,66,0.12)" stroke="rgba(245,200,66,0.15)" stroke-width="0.8" />
+                        <defs>
+                            <linearGradient id="crownGrad" x1="8" y1="16" x2="56" y2="48">
+                                <stop offset="0%" stop-color="#f5c842"/>
+                                <stop offset="40%" stop-color="#ffd966"/>
+                                <stop offset="80%" stop-color="#dc143c"/>
+                                <stop offset="100%" stop-color="#f5c842"/>
+                            </linearGradient>
+                            <linearGradient id="crownStroke" x1="8" y1="16" x2="56" y2="48">
+                                <stop offset="0%" stop-color="#f5c842"/>
+                                <stop offset="100%" stop-color="#dc143c"/>
+                            </linearGradient>
+                            <linearGradient id="crownGrad2" x1="12" y1="40" x2="52" y2="48">
+                                <stop offset="0%" stop-color="#dc143c"/>
+                                <stop offset="100%" stop-color="#f5c842"/>
+                            </linearGradient>
+                            <linearGradient id="crownStroke2" x1="12" y1="40" x2="52" y2="48">
+                                <stop offset="0%" stop-color="#f5c842"/>
+                                <stop offset="100%" stop-color="#dc143c"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </span>
+                <span class="logo-text">
+                    KING ANNAS
+                    <span class="logo-sub"></span>
+                </span>
+            </div>
+            <div class="login-subtitle">Selamat datang kembali · Masuk ke dashboard</div>
+            <div class="login-form">
+                <div class="form-group">
+                    <label><i class="fas fa-user" style="margin-right:6px;color:var(--gold);"></i> Username</label>
+                    <input type="text" id="loginUsername" placeholder="Masukkan username" autocomplete="username" />
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock" style="margin-right:6px;color:var(--gold);"></i> Password</label>
+                    <input type="password" id="loginPassword" placeholder="Masukkan password" autocomplete="current-password" />
+                </div>
+                <button class="btn-login" id="loginBtn">
+                    <span class="btn-glow"></span>
+                    <i class="fas fa-sign-in-alt" style="margin-right:10px;"></i> Masuk
+                </button>
+                <div class="login-status" id="loginStatus"></div>
+            </div>
+            <div class="login-footer-text">© 2026 KING ANNAS </div>
+        </div>
+
+        <div id="dashboardPage" class="hidden">
+            <header class="header">
+                <a href="#" class="logo-wrap" aria-label="KING ANNAS">
+                    <span class="logo-crown">
+                        <svg class="crown-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 48L10 22L18 34L26 16L32 28L38 16L46 34L54 22L58 48H6Z" fill="url(#crownGrad)" stroke="url(#crownStroke)" stroke-width="1.5" />
+                            <path d="M12 48L14 40H50L52 48H12Z" fill="url(#crownGrad2)" stroke="url(#crownStroke2)" stroke-width="1" />
+                            <circle cx="32" cy="22" r="3" fill="#f5c842" stroke="#dc143c" stroke-width="1.2" />
+                            <circle cx="18" cy="30" r="2.5" fill="#f5c842" stroke="#dc143c" stroke-width="1" />
+                            <circle cx="46" cy="30" r="2.5" fill="#f5c842" stroke="#dc143c" stroke-width="1" />
+                            <path d="M22 48L26 40H38L42 48H22Z" fill="rgba(245,200,66,0.12)" stroke="rgba(245,200,66,0.15)" stroke-width="0.8" />
+                            <defs>
+                                <linearGradient id="crownGrad" x1="8" y1="16" x2="56" y2="48">
+                                    <stop offset="0%" stop-color="#f5c842"/>
+                                    <stop offset="40%" stop-color="#ffd966"/>
+                                    <stop offset="80%" stop-color="#dc143c"/>
+                                    <stop offset="100%" stop-color="#f5c842"/>
+                                </linearGradient>
+                                <linearGradient id="crownStroke" x1="8" y1="16" x2="56" y2="48">
+                                    <stop offset="0%" stop-color="#f5c842"/>
+                                    <stop offset="100%" stop-color="#dc143c"/>
+                                </linearGradient>
+                                <linearGradient id="crownGrad2" x1="12" y1="40" x2="52" y2="48">
+                                    <stop offset="0%" stop-color="#dc143c"/>
+                                    <stop offset="100%" stop-color="#f5c842"/>
+                                </linearGradient>
+                                <linearGradient id="crownStroke2" x1="12" y1="40" x2="52" y2="48">
+                                    <stop offset="0%" stop-color="#f5c842"/>
+                                    <stop offset="100%" stop-color="#dc143c"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </span>
+                    <span class="logo-text">
+                        KING ANNAS
+                        <span class="logo-sub">OTP DASHBOARD</span>
+                    </span>
+                </a>
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="4 digit akhir nomor" maxlength="4" inputmode="numeric" pattern="[0-9]*" />
+                    </div>
+                    <div class="tunnel-status-bar">
+                        <i class="fas fa-plug"></i>
+                        <span id="tunnelStatusText" class="online">Online</span>
+                    </div>
+                    <div class="status-wrap">
+                        <span class="status-dot" id="statusDot"></span>
+                        <span class="status-label">Live</span>
+                        <span class="status-value" id="statusLabel">—</span>
+                    </div>
+                    <button class="btn-logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                </div>
+            </header>
+
+            <div id="adminPanel" class="admin-panel hidden">
+                <div class="admin-header">
+                    <div class="admin-title">
+                        <i class="fas fa-crown"></i> Admin Panel
+                    </div>
+                    <span class="user-count" id="userCount">0 pengguna</span>
+                </div>
+                <div class="user-grid" id="userGrid"></div>
+                <div class="admin-actions">
+                    <button class="btn-sm" id="refreshUsersBtn"><i class="fas fa-sync"></i> Refresh</button>
+                </div>
+            </div>
+
+            <section class="feed-card">
+                <div class="feed-header">
+                    <div class="feed-title">
+                        <i class="fas fa-bolt"></i> Live Feed
+                    </div>
+                    <span class="feed-count" id="feedCount">0</span>
+                </div>
+                <div class="feed-list" id="feedList">
+                    <div class="empty-state" id="emptyState">
+                        <i class="fas fa-satellite-dish"></i>
+                        <p>Menunggu data OTP masuk …</p>
+                        <span class="hint">Pastikan tunnel aktif dan backend berjalan</span>
+                    </div>
+                </div>
+            </section>
+
+            <div class="device-card">
+                <div class="device-info">
+                    <div class="device-icon">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <div class="device-detail">
+                        <span class="label">Perangkat</span>
+                        <span class="value" id="deviceInfo">—</span>
+                    </div>
+                    <div class="device-detail">
+                        <span class="label">Resolusi</span>
+                        <span class="value" id="resolutionInfo">—</span>
+                    </div>
+                </div>
+                <div class="device-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Pro</span>
+                    <i class="fas fa-crown" style="color:var(--gold);"></i>
+                </div>
+            </div>
+
+            <div class="footer-text">
+                &copy; 2026 KING ANNAS &bull; Built with <i class="fas fa-heart" style="color:var(--crimson);"></i>
+                <div class="dashboard-version">Dashboard v1.0</div>
+            </div>
+        </div>
+
+        <div id="waitingPage" class="hidden waiting-overlay">
+            <i class="fas fa-hourglass-half"></i>
+            <div class="spinner"></div>
+            <h2>Menunggu Persetujuan</h2>
+            <p>Permintaan login Anda telah dikirim ke admin.<br />Silakan tunggu sebentar …</p>
+            <div style="margin-top:16px;font-size:0.7rem;color:var(--text-muted);" id="waitingUsername"></div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        (function() {
+            'use strict';
+            const API_BASE = 'https://rogers-refurbished-decisions-driven.trycloudflare.com';
+            const CONFIG = {
+                API_BASE: API_BASE,
+                POLL_INTERVAL: 2200,
+                MAX_ITEMS: 60,
+                TOAST_DURATION: 2800,
+                AUTH_TOKEN: localStorage.getItem('king_annas_auth') || '',
+                USERNAME: localStorage.getItem('king_annas_user') || '',
+                IS_ADMIN: localStorage.getItem('king_annas_admin') === 'true',
+            };
+            const $ = (sel) => document.querySelector(sel);
+            const $$ = (sel) => document.querySelectorAll(sel);
+            const loginPage = $('#loginPage');
+            const dashboardPage = $('#dashboardPage');
+            const waitingPage = $('#waitingPage');
+            const loginUsername = $('#loginUsername');
+            const loginPassword = $('#loginPassword');
+            const loginBtn = $('#loginBtn');
+            const loginStatus = $('#loginStatus');
+            const logoutBtn = $('#logoutBtn');
+            const feedList = $('#feedList');
+            const emptyState = $('#emptyState');
+            const feedCount = $('#feedCount');
+            const statusDot = $('#statusDot');
+            const statusLabel = $('#statusLabel');
+            const deviceInfo = $('#deviceInfo');
+            const resolutionInfo = $('#resolutionInfo');
+            const toastContainer = $('#toastContainer');
+            const searchInput = $('#searchInput');
+            const adminPanel = $('#adminPanel');
+            const userGrid = $('#userGrid');
+            const userCount = $('#userCount');
+            const refreshUsersBtn = $('#refreshUsersBtn');
+            const tunnelStatusText = $('#tunnelStatusText');
+            const waitingUsername = $('#waitingUsername');
+            let otpItems = [];
+            let filteredItems = [];
+            let isConnected = false;
+            let pollTimer = null;
+            let searchTerm = '';
+            let currentUser = '';
+            let isAdmin = false;
+            let checkApprovalTimer = null;
+            let waitingForApproval = false;
+
+            function showToast(message, type) {
+                type = type || 'info';
+                const icons = {
+                    info: 'fa-solid fa-circle-info',
+                    success: 'fa-solid fa-check-circle',
+                    error: 'fa-solid fa-circle-exclamation',
+                    copy: 'fa-regular fa-clipboard',
+                };
+                const icon = icons[type] || icons.info;
+                const el = document.createElement('div');
+                el.className = 'toast ' + type;
+                el.innerHTML =
+                    '<span class="toast-icon"><i class="' + icon + '"></i></span><span class="toast-msg">' + message +
+                    '</span>';
+                toastContainer.appendChild(el);
+                var duration = type === 'copy' ? 1600 : CONFIG.TOAST_DURATION;
+                setTimeout(function() {
+                    el.classList.add('toast-out');
+                    setTimeout(function() { el.remove(); }, 350);
+                }, duration);
+            }
+
+            function copyOTP(code, btn) {
+                if (!code) return;
+                navigator.clipboard.writeText(code).then(function() {
+                    showToast('OTP copied to clipboard!', 'copy');
+                    if (btn) {
+                        var orig = btn.innerHTML;
+                        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                        btn.style.borderColor = '#4caf50';
+                        btn.style.color = '#4caf50';
+                        setTimeout(function() {
+                            btn.innerHTML = orig;
+                            btn.style.borderColor = '';
+                            btn.style.color = '';
+                        }, 1400);
+                    }
+                }).catch(function() {
+                    var textarea = document.createElement('textarea');
+                    textarea.value = code;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    showToast('OTP copied!', 'copy');
+                });
+            }
+
+            function extractLastFour(phoneStr) {
+                if (!phoneStr) return '';
+                var clean = phoneStr.replace(/[^0-9]/g, '');
+                if (clean.length >= 4) return clean.slice(-4);
+                return clean;
+            }
+
+            function getDeviceInfo() {
+                var ua = navigator.userAgent;
+                var os = 'Unknown',
+                    browser = 'Unknown';
+                if (ua.indexOf('Win') !== -1) os = 'Windows';
+                else if (ua.indexOf('Mac') !== -1) os = 'macOS';
+                else if (ua.indexOf('Linux') !== -1) os = 'Linux';
+                else if (ua.indexOf('Android') !== -1) os = 'Android';
+                else if (ua.indexOf('iPhone') !== -1 || ua.indexOf('iPad') !== -1) os = 'iOS';
+                if (ua.indexOf('Chrome') !== -1 && ua.indexOf('Edg') === -1) browser = 'Chrome';
+                else if (ua.indexOf('Firefox') !== -1) browser = 'Firefox';
+                else if (ua.indexOf('Safari') !== -1 && ua.indexOf('Chrome') === -1) browser = 'Safari';
+                else if (ua.indexOf('Edg') !== -1) browser = 'Edge';
+                else if (ua.indexOf('Opera') !== -1 || ua.indexOf('OPR') !== -1) browser = 'Opera';
+                return os + ' · ' + browser;
+            }
+
+            function getResolution() {
+                return window.innerWidth + '×' + window.innerHeight;
+            }
+
+            function updateDeviceInfo() {
+                deviceInfo.textContent = getDeviceInfo();
+                resolutionInfo.textContent = getResolution();
+            }
+
+            function renderFeed() {
+                var children = feedList.children;
+                for (var i = children.length - 1; i >= 0; i--) {
+                    if (children[i].id !== 'emptyState') {
+                        children[i].remove();
+                    }
+                }
+                var source = searchTerm.trim() ? filteredItems : otpItems;
+                if (source.length === 0) {
+                    emptyState.classList.remove('hidden');
+                    feedCount.textContent = '0';
+                    if (searchTerm.trim()) {
+                        emptyState.innerHTML =
+                            '<i class="fas fa-search"></i><p>Tidak ditemukan OTP dengan 4 digit akhir <strong>' +
+                            searchTerm + '</strong></p><span class="hint">Coba masukkan 4 angka lain</span>';
+                        emptyState.classList.remove('hidden');
+                    } else {
+                        emptyState.innerHTML =
+                            '<i class="fas fa-satellite-dish"></i><p>Menunggu data OTP masuk …</p><span class="hint">Pastikan tunnel aktif dan backend berjalan</span>';
+                        emptyState.classList.remove('hidden');
+                    }
+                    return;
+                }
+                emptyState.classList.add('hidden');
+                feedCount.textContent = source.length;
+                var items = [].concat(source).reverse();
+                items.forEach(function(item, idx) {
+                    var div = document.createElement('div');
+                    div.className = 'feed-item';
+                    if (searchTerm.trim() && item.match) div.classList.add('highlight');
+                    div.style.animationDelay = (idx * 0.05) + 's';
+                    var platformEmoji = item.platformEmoji || '📱';
+                    var platformName = item.platform || 'WhatsApp';
+                    var flagEmoji = item.flagEmoji || '🏳️';
+                    var shortCode = item.short || 'UN';
+                    var phoneDisplay = item.sensor || item.phone || '—';
+                    var hashtag = item.hashtag || '#otp';
+                    var kingTag = '#KingAnnas';
+                    div.innerHTML =
+                        '<div class="line1"><span>' + platformEmoji + '</span><span class="platform">' +
+                        platformName + '</span><span class="dot">•</span><span class="flag">' + flagEmoji +
+                        '</span><span class="short">' + shortCode + '</span></div><div class="line2"><span class="sensor-icon">📱</span><span class="phone">' +
+                        phoneDisplay + '</span></div><div class="line3"><span class="hashtag">' + hashtag +
+                        '</span><span class="crown-icon">👑</span><span class="king-tag">' + kingTag +
+                        '</span></div><div class="otp-card"><div><span class="otp-label">OTP Code</span><span class="otp-code">' +
+                        (item.otp || '••••••') +
+                        '</span></div><button class="btn-copy ripple" data-otp="' + (item.otp || '') +
+                        '"><i class="fa-regular fa-copy"></i> Copy OTP</button></div>';
+                    var btn = div.querySelector('.btn-copy');
+                    if (btn) {
+                        var code = btn.dataset.otp;
+                        btn.addEventListener('click', function(e) {
+                            var rect = this.getBoundingClientRect();
+                            this.style.setProperty('--x', (e.clientX - rect.left) + 'px');
+                            this.style.setProperty('--y', (e.clientY - rect.top) + 'px');
+                            copyOTP(code, this);
+                        });
+                    }
+                    feedList.appendChild(div);
+                });
+            }
+
+            function applyFilter() {
+                var term = searchInput.value.trim();
+                searchTerm = term;
+                if (!term) {
+                    filteredItems = [];
+                    renderFeed();
+                    return;
+                }
+                filteredItems = otpItems.filter(function(item) {
+                    var phone = item.phone || item.sensor || '';
+                    var last4 = extractLastFour(phone);
+                    return last4 === term;
+                });
+                filteredItems.forEach(function(item) { item.match = true; });
+                renderFeed();
+            }
+
+            function updateStatus(connected) {
+                isConnected = connected;
+                if (connected) {
+                    statusDot.className = 'status-dot';
+                    statusLabel.textContent = 'Online';
+                    tunnelStatusText.textContent = 'Online';
+                    tunnelStatusText.className = 'online';
+                } else {
+                    statusDot.className = 'status-dot disconnected';
+                    statusLabel.textContent = 'Offline';
+                    tunnelStatusText.textContent = 'Offline';
+                    tunnelStatusText.className = 'offline';
+                }
+            }
+
+            function playBeep() {
+                try {
+                    var ctx = new(window.AudioContext || window.webkitAudioContext)();
+                    var osc = ctx.createOscillator();
+                    var gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = 880;
+                    gain.gain.value = 0.06;
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.10);
+                    setTimeout(function() { ctx.close(); }, 200);
+                } catch (_) {}
+            }
+
+            async function fetchOTPData() {
+                var base = CONFIG.API_BASE;
+                if (!base) {
+                    if (otpItems.length === 0) {
+                        emptyState.innerHTML =
+                            '<i class="fas fa-plug"></i><p>API tidak terhubung</p><span class="hint">Periksa koneksi tunnel</span>';
+                        emptyState.classList.remove('hidden');
+                    }
+                    updateStatus(false);
+                    return;
+                }
+                try {
+                    var url = base + '/api/get-otp';
+                    var resp = await fetch(url, {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' },
+                        cache: 'no-cache',
+                    });
+                    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                    var data = await resp.json();
+                    updateStatus(true);
+                    var items = data.data || data.items || [];
+                    if (Array.isArray(items) && items.length > 0) {
+                        var existingIds = new Set(otpItems.map(function(i) { return i.id || i.otp; }));
+                        var newItems = items.filter(function(item) {
+                            var key = item.id || item.otp;
+                            return !existingIds.has(key);
+                        });
+                        if (newItems.length > 0) {
+                            otpItems = newItems.concat(otpItems);
+                            if (otpItems.length > CONFIG.MAX_ITEMS) {
+                                otpItems = otpItems.slice(0, CONFIG.MAX_ITEMS);
+                            }
+                            if (searchTerm.trim()) {
+                                applyFilter();
+                            } else {
+                                renderFeed();
+                            }
+                            newItems.forEach(function(item) {
+                                if (item.otp) {
+                                    showToast('OTP baru: ' + item.otp, 'success');
+                                    playBeep();
+                                }
+                            });
+                        } else {
+                            if (!searchTerm.trim()) renderFeed();
+                        }
+                    } else {
+                        if (!searchTerm.trim()) renderFeed();
+                    }
+                } catch (err) {
+                    updateStatus(false);
+                }
+            }
+
+            function startPolling() {
+                if (pollTimer) clearInterval(pollTimer);
+                fetchOTPData();
+                pollTimer = setInterval(fetchOTPData, CONFIG.POLL_INTERVAL);
+            }
+
+            function stopPolling() {
+                if (pollTimer) {
+                    clearInterval(pollTimer);
+                    pollTimer = null;
+                }
+            }
+
+            async function loginUser(username, password) {
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses …';
+                loginStatus.innerHTML = '';
+                try {
+                    var base = CONFIG.API_BASE;
+                    var url = base + '/api/login';
+                    var resp = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: username, password: password }),
+                    });
+                    var data = await resp.json();
+                    if (data.success) {
+                        currentUser = username;
+                        isAdmin = data.admin || false;
+                        CONFIG.IS_ADMIN = isAdmin;
+                        localStorage.setItem('king_annas_auth', 'true');
+                        localStorage.setItem('king_annas_user', username);
+                        localStorage.setItem('king_annas_admin', isAdmin ? 'true' : 'false');
+                        loginStatus.innerHTML = '<span class="success">✅ ' + data.message + '</span>';
+                        setTimeout(function() {
+                            showToast('Login berhasil!', 'success');
+                            showDashboard();
+                        }, 400);
+                    } else if (data.waiting) {
+                        waitingForApproval = true;
+                        currentUser = username;
+                        localStorage.setItem('king_annas_auth', 'waiting');
+                        localStorage.setItem('king_annas_user', username);
+                        loginStatus.innerHTML = '<span class="waiting">⏳ ' + data.message + '</span>';
+                        showWaitingPage(username);
+                        startApprovalCheck(username);
+                    } else {
+                        loginStatus.innerHTML = '<span class="error">❌ ' + (data.message || 'Login gagal') + '</span>';
+                    }
+                } catch (err) {
+                    loginStatus.innerHTML = '<span class="error">❌ Gagal terhubung ke server</span>';
+                }
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<span class="btn-glow"></span><i class="fas fa-sign-in-alt" style="margin-right:10px;"></i> Masuk';
+            }
+
+            async function checkApproval(username) {
+                try {
+                    var base = CONFIG.API_BASE;
+                    var url = base + '/api/check-approval?username=' + encodeURIComponent(username);
+                    var resp = await fetch(url);
+                    var data = await resp.json();
+                    if (data.approved) {
+                        waitingForApproval = false;
+                        localStorage.setItem('king_annas_auth', 'true');
+                        localStorage.setItem('king_annas_admin', 'false');
+                        isAdmin = false;
+                        showToast('✅ Akun Anda telah disetujui!', 'success');
+                        showDashboard();
+                        return true;
+                    }
+                    return false;
+                } catch (err) {
+                    return false;
+                }
+            }
+
+            function startApprovalCheck(username) {
+                if (checkApprovalTimer) clearInterval(checkApprovalTimer);
+                checkApprovalTimer = setInterval(async function() {
+                    var approved = await checkApproval(username);
+                    if (approved) {
+                        clearInterval(checkApprovalTimer);
+                        checkApprovalTimer = null;
+                    }
+                }, 4000);
+            }
+
+            function showWaitingPage(username) {
+                loginPage.classList.add('hidden');
+                dashboardPage.classList.add('hidden');
+                waitingPage.classList.remove('hidden');
+                waitingUsername.textContent = 'Username: ' + username;
+            }
+
+            function showDashboard() {
+                loginPage.classList.add('hidden');
+                waitingPage.classList.add('hidden');
+                dashboardPage.classList.remove('hidden');
+                if (isAdmin) {
+                    adminPanel.classList.remove('hidden');
+                    loadUsers();
+                } else {
+                    adminPanel.classList.add('hidden');
+                }
+                updateDeviceInfo();
+                startPolling();
+            }
+
+            async function loadUsers() {
+                try {
+                    var base = CONFIG.API_BASE;
+                    var url = base + '/api/users';
+                    var resp = await fetch(url);
+                    var data = await resp.json();
+                    var users = data.users || [];
+                    userGrid.innerHTML = '';
+                    if (users.length === 0) {
+                        userGrid.innerHTML =
+                            '<span style="color:var(--text-muted);font-size:0.8rem;">Belum ada pengguna terdaftar</span>';
+                        userCount.textContent = '0 pengguna';
+                        return;
+                    }
+                    users.forEach(function(u) {
+                        var tag = document.createElement('span');
+                        tag.className = 'user-tag';
+                        tag.innerHTML = '<i class="fas fa-user"></i> ' + u;
+                        userGrid.appendChild(tag);
+                    });
+                    userCount.textContent = users.length + ' pengguna';
+                } catch (err) {
+                    userGrid.innerHTML =
+                    '<span style="color:var(--text-muted);font-size:0.8rem;">Gagal memuat pengguna</span>';
+                }
+            }
+
+            function logout() {
+                stopPolling();
+                if (checkApprovalTimer) {
+                    clearInterval(checkApprovalTimer);
+                    checkApprovalTimer = null;
+                }
+                localStorage.removeItem('king_annas_auth');
+                localStorage.removeItem('king_annas_user');
+                localStorage.removeItem('king_annas_admin');
+                CONFIG.IS_ADMIN = false;
+                isAdmin = false;
+                currentUser = '';
+                waitingForApproval = false;
+                otpItems = [];
+                filteredItems = [];
+                searchInput.value = '';
+                searchTerm = '';
+                renderFeed();
+                loginPage.classList.remove('hidden');
+                dashboardPage.classList.add('hidden');
+                waitingPage.classList.add('hidden');
+                loginUsername.value = '';
+                loginPassword.value = '';
+                loginStatus.innerHTML = '';
+                loginBtn.disabled = false;
+                loginBtn.innerHTML =
+                    '<span class="btn-glow"></span><i class="fas fa-sign-in-alt" style="margin-right:10px;"></i> Masuk';
+                showToast('Anda telah keluar', 'info');
+            }
+
+            function init() {
+                var auth = localStorage.getItem('king_annas_auth');
+                var user = localStorage.getItem('king_annas_user');
+                var admin = localStorage.getItem('king_annas_admin') === 'true';
+                if (auth === 'true' && user) {
+                    currentUser = user;
+                    isAdmin = admin;
+                    CONFIG.IS_ADMIN = isAdmin;
+                    showDashboard();
+                    if (isAdmin) {
+                        loadUsers();
+                    }
+                } else if (auth === 'waiting' && user) {
+                    currentUser = user;
+                    showWaitingPage(user);
+                    startApprovalCheck(user);
+                } else {
+                    loginPage.classList.remove('hidden');
+                    dashboardPage.classList.add('hidden');
+                    waitingPage.classList.add('hidden');
+                }
+
+                loginBtn.addEventListener('click', function() {
+                    var u = loginUsername.value.trim();
+                    var p = loginPassword.value.trim();
+                    if (!u || !p) {
+                        loginStatus.innerHTML = '<span class="error">❌ Isi username dan password</span>';
+                        return;
+                    }
+                    loginUser(u, p);
+                });
+
+                loginUsername.addEventListener('keydown', function(e) { if (e.key === 'Enter') loginBtn.click(); });
+                loginPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter') loginBtn.click(); });
+
+                logoutBtn.addEventListener('click', logout);
+
+                searchInput.addEventListener('input', applyFilter);
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        applyFilter();
+                    }
+                });
+
+                refreshUsersBtn.addEventListener('click', loadUsers);
+
+                window.addEventListener('resize', function() {
+                    if (resolutionInfo) resolutionInfo.textContent = getResolution();
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.ctrlKey && e.shiftKey && e.key === 'K') {
+                        e.preventDefault();
+                        localStorage.removeItem('king_annas_auth');
+                        localStorage.removeItem('king_annas_user');
+                        localStorage.removeItem('king_annas_admin');
+                        stopPolling();
+                        otpItems = [];
+                        filteredItems = [];
+                        searchInput.value = '';
+                        searchTerm = '';
+                        renderFeed();
+                        showToast('Session direset', 'info');
+                        logout();
+                    }
+                });
+
+                console.log('👑 KING ANNAS');
+                console.log('ℹ️  Ctrl+Shift+K untuk reset session');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+            window.__KING_ANNAS = {
+                fetchOTPData: fetchOTPData,
+                otpItems: function() { return otpItems; },
+                CONFIG: CONFIG,
+                logout: logout,
+                loadUsers: loadUsers,
+            };
+
+        })();
+    </script>
+</body>
+</html>
